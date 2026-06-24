@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savings Goals — Plan & Track Your Financial Goals</title>
+  <meta name="description" content="Set savings goals, track progress, and celebrate milestones. Integrated with your debt payoff plan.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .hero { padding: 60px 0 30px; text-align: center; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3rem); color: var(--ink); margin: 0 0 15px; }
+    .hero em { color: var(--green-bright); font-style: normal; }
+    .hero p { color: var(--slate); max-width: 500px; margin: 0 auto 30px; font-size: 1.05rem; }
+    
+    .main-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; padding: 40px 0; }
+    @media(max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+    
+    .panel { background: #fff; border: 1px solid var(--line-light); border-radius: 14px; padding: 24px; }
+    .panel.dark { background: var(--ink-2); color: var(--paper); }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--line); padding-bottom: 16px; }
+    .panel-head h2 { margin: 0; font-size: 1.3rem; }
+    
+    .goal-form { display: flex; flex-direction: column; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 0.85rem; font-weight: 600; color: var(--slate-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+    .form-group input, .form-group select { padding: 10px 12px; border: 1.5px solid var(--line-light); border-radius: 8px; font-family: inherit; font-size: 0.95rem; }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(46, 125, 91, 0.1); }
+    
+    .goal-list { display: flex; flex-direction: column; gap: 12px; }
+    .goal-item { background: rgba(242, 237, 227, 0.05); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+    .goal-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px; }
+    .goal-name { font-weight: 600; font-size: 1rem; }
+    .goal-badge { background: var(--green-bright); color: #0E1A24; font-size: 0.7rem; padding: 3px 10px; border-radius: 12px; font-weight: 700; }
+    .goal-meta { font-size: 0.85rem; color: var(--slate); margin: 8px 0; }
+    .goal-progress { margin-top: 10px; }
+    .progress-bar { background: rgba(242, 237, 227, 0.1); height: 6px; border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+    .progress-fill { background: var(--green-bright); height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+    .progress-text { font-size: 0.8rem; color: var(--slate); display: flex; justify-content: space-between; }
+    .goal-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .btn-small { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); background: transparent; font-size: 0.8rem; cursor: pointer; color: var(--slate-dim); transition: all 0.2s; }
+    .btn-small:hover { border-color: var(--green); color: var(--green); }
+    .btn-add { background: var(--green); color: white; border: none; padding: 11px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; }
+    .btn-add:hover { background: var(--green-bright); }
+    
+    .timeline { display: flex; flex-direction: column; gap: 14px; margin-top: 20px; }
+    .milestone { display: flex; gap: 12px; align-items: flex-start; padding: 12px; background: rgba(242, 237, 227, 0.04); border-left: 3px solid var(--green-bright); border-radius: 4px; }
+    .milestone-dot { width: 24px; height: 24px; border-radius: 50%; background: var(--green-bright); color: #0E1A24; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+    .milestone-text { flex: 1; }
+    .milestone-title { font-weight: 600; font-size: 0.95rem; }
+    .milestone-date { font-size: 0.8rem; color: var(--slate); margin-top: 2px; }
+    
+    .insights { background: var(--ink-2); color: var(--paper); border-radius: 12px; padding: 20px; margin-top: 24px; }
+    .insights h3 { margin: 0 0 12px; font-size: 1.05rem; }
+    .insights p { margin: 8px 0; font-size: 0.9rem; line-height: 1.5; color: var(--slate); }
+    
+    .nav { background: transparent; padding: 14px 0; border-bottom: 1px solid rgba(14, 26, 36, 0.03); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+    .brand { font-weight: 700; display: flex; align-items: center; gap: 8px; color: var(--ink); }
+    .brand .dot { width: 10px; height: 10px; background: var(--green-bright); border-radius: 50%; }
+    .nav-links { display: flex; gap: 8px; }
+    .nav-link { background: transparent; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; color: var(--slate); font-weight: 500; transition: all 0.2s; }
+    .nav-link.active { color: var(--green-bright); font-weight: 700; }
+    .nav-link:hover { color: var(--green); }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <div class="brand" onclick="location.href='../index.html'" style="cursor:pointer;"><span class="dot"></span> Debt Freedom</div>
+      <div class="nav-links">
+        <button class="nav-link" onclick="location.href='../index.html'">Calculator</button>
+        <button class="nav-link" onclick="location.href='dashboard.html'">Dashboard</button>
+        <button class="nav-link" onclick="location.href='savings-goals.html'" class="active">Goals</button>
+        <button class="nav-link" onclick="location.href='budget-planner.html'">Budget</button>
+        <button class="nav-link" onclick="location.href='learn.html'">Learn</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="wrap">
+      <h1>Savings <em>Goals</em> That Stick</h1>
+      <p>Set realistic targets, track progress automatically, and celebrate when you hit them. Savings goals work hand-in-hand with your debt payoff plan.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="main-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Add a Savings Goal</h2>
+        </div>
+        <form class="goal-form" id="goalForm">
+          <div class="form-group">
+            <label for="goalName">Goal Name</label>
+            <input type="text" id="goalName" placeholder="e.g., Emergency Fund" required>
+          </div>
+          <div class="form-group">
+            <label for="goalCategory">Category</label>
+            <select id="goalCategory" required>
+              <option value="">Choose one...</option>
+              <option value="emergency">Emergency Fund</option>
+              <option value="vacation">Vacation</option>
+              <option value="home">Home Down Payment</option>
+              <option value="vehicle">Vehicle Purchase</option>
+              <option value="education">Education</option>
+              <option value="investment">Investment</option>
+              <option value="retirement">Retirement</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="goalTarget">Target Amount ($)</label>
+            <input type="number" id="goalTarget" placeholder="5000" min="0" step="100" required>
+          </div>
+          <div class="form-group">
+            <label for="goalDeadline">Target Date</label>
+            <input type="date" id="goalDeadline" required>
+          </div>
+          <div class="form-group">
+            <label for="goalCurrent">Current Amount ($)</label>
+            <input type="number" id="goalCurrent" placeholder="0" min="0" step="1" value="0">
+          </div>
+          <button type="submit" class="btn-add">+ Create Goal</button>
+        </form>
+      </div>
+
+      <div class="panel dark">
+        <div class="panel-head">
+          <h2>Your Goals</h2>
+        </div>
+        <div class="goal-list" id="goalList">
+          <div style="color: var(--slate); text-align: center; padding: 30px 20px; font-size: 0.95rem;">Add your first savings goal to get started.</div>
+        </div>
+        
+        <div class="insights">
+          <h3>📈 Goal Insights</h3>
+          <p id="insightText">Create goals to see your total savings target and timeline recommendations.</p>
+          <p style="margin-top: 12px; font-size: 0.85rem; color: var(--slate-dim);">Tip: Build an emergency fund first (3-6 months expenses), then focus on bigger goals after debt is paid off.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script>
+    const GOALS_KEY = 'df.savings_goals.v1';
+
+    function loadGoals() {
+      try {
+        return JSON.parse(localStorage.getItem(GOALS_KEY)) || [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveGoals(goals) {
+      localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
+    }
+
+    function renderGoals() {
+      const goals = loadGoals();
+      const goalList = document.getElementById('goalList');
+      
+      if (goals.length === 0) {
+        goalList.innerHTML = '<div style="color: var(--slate); text-align: center; padding: 30px 20px; font-size: 0.95rem;">Add your first savings goal to get started.</div>';
+        return;
+      }
+
+      goalList.innerHTML = '';
+      goals.forEach((goal, idx) => {
+        const progress = (goal.current / goal.target) * 100;
+        const remaining = goal.target - goal.current;
+        const daysLeft = Math.ceil((new Date(goal.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+        const monthlyNeeded = daysLeft > 0 ? remaining / (daysLeft / 30) : 0;
+        
+        const item = document.createElement('div');
+        item.className = 'goal-item';
+        item.innerHTML = `
+          <div class="goal-header">
+            <div class="goal-name">${esc(goal.name)}</div>
+            <span class="goal-badge">${Math.min(100, Math.round(progress))}%</span>
+          </div>
+          <div class="goal-meta">Target: $${goal.target.toLocaleString()} • Category: ${goal.category}</div>
+          <div class="goal-progress">
+            <div class="progress-bar"><div class="progress-fill" style="width: ${Math.min(100, progress)}%"></div></div>
+            <div class="progress-text">
+              <span>$${goal.current.toLocaleString()} of $${goal.target.toLocaleString()}</span>
+              <span>$${remaining.toLocaleString()} to go</span>
+            </div>
+          </div>
+          <div class="goal-meta" style="margin-top: 8px;">
+            ${daysLeft > 0 ? `Need $${monthlyNeeded.toFixed(2)}/month • ${daysLeft} days left` : '🎉 Deadline reached!'}
+          </div>
+          <div class="goal-actions">
+            <button class="btn-small" onclick="editGoalAmount(${idx})">+ Add Amount</button>
+            <button class="btn-small" onclick="deleteGoal(${idx})" style="color: var(--rust); border-color: var(--rust);">Delete</button>
+          </div>
+        `;
+        goalList.appendChild(item);
+      });
+
+      updateInsights(goals);
+    }
+
+    function updateInsights(goals) {
+      const totalTarget = goals.reduce((sum, g) => sum + g.target, 0);
+      const totalSaved = goals.reduce((sum, g) => sum + g.current, 0);
+      const insightText = document.getElementById('insightText');
+      insightText.innerHTML = `<strong>Total Savings Goal:</strong> $${totalTarget.toLocaleString()} • <strong>Currently Saved:</strong> $${totalSaved.toLocaleString()}`;
+    }
+
+    function editGoalAmount(idx) {
+      const amount = prompt('Enter amount to add:');
+      if (amount && !isNaN(amount)) {
+        const goals = loadGoals();
+        goals[idx].current += parseFloat(amount);
+        saveGoals(goals);
+        renderGoals();
+        showToast('Amount added! ✓');
+      }
+    }
+
+    function deleteGoal(idx) {
+      if (confirm('Delete this goal?')) {
+        const goals = loadGoals();
+        goals.splice(idx, 1);
+        saveGoals(goals);
+        renderGoals();
+        showToast('Goal deleted.');
+      }
+    }
+
+    document.getElementById('goalForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const goal = {
+        id: uid(),
+        name: document.getElementById('goalName').value,
+        category: document.getElementById('goalCategory').value,
+        target: parseFloat(document.getElementById('goalTarget').value),
+        current: parseFloat(document.getElementById('goalCurrent').value),
+        deadline: document.getElementById('goalDeadline').value,
+        created: new Date().toISOString()
+      };
+      const goals = loadGoals();
+      goals.push(goal);
+      saveGoals(goals);
+      document.getElementById('goalForm').reset();
+      renderGoals();
+      showToast('Goal created! 🎯');
+    });
+
+    renderGoals();
+  </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget Planner — Smart Income & Expense Tracking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .hero { padding: 60px 0 30px; text-align: center; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 15px; }
+    .hero em { color: var(--green-bright); font-style: normal; }
+    .hero p { color: var(--slate); max-width: 500px; margin: 0 auto 30px; }
+    
+    .budget-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 40px 0; }
+    @media(max-width: 800px) { .budget-grid { grid-template-columns: 1fr; } }
+    
+    .card { background: #fff; border: 1px solid var(--line-light); border-radius: 12px; padding: 20px; }
+    .card h2 { margin: 0 0 18px; font-size: 1.2rem; border-bottom: 1px solid var(--line-light); padding-bottom: 12px; }
+    
+    .category-list { display: flex; flex-direction: column; gap: 10px; }
+    .category-row { display: grid; grid-template-columns: 1fr 100px 80px; gap: 10px; align-items: center; }
+    .category-row input { padding: 8px 10px; border: 1px solid var(--line-light); border-radius: 6px; font-size: 0.9rem; }
+    .category-row input:focus { outline: none; border-color: var(--green); }
+    .btn-remove { padding: 6px 10px; background: rgba(181, 80, 46, 0.1); color: var(--rust); border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+    .btn-remove:hover { background: rgba(181, 80, 46, 0.2); }
+    
+    .summary { background: var(--ink-2); color: var(--paper); border-radius: 10px; padding: 18px; margin-top: 20px; }
+    .summary-row { display: flex; justify-content: space-between; margin: 8px 0; }
+    .summary-row strong { color: var(--green-bright); }
+    
+    .income-input { padding: 12px; border: 1.5px solid var(--green); border-radius: 8px; font-size: 1rem; margin: 10px 0; }
+    .add-btn { background: var(--green); color: white; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px; }
+    .add-btn:hover { background: var(--green-bright); }
+    
+    .chart-container { margin-top: 20px; height: 250px; }
+  </style>
+</head>
+<body>
+  <nav style="background: transparent; padding: 14px 0; border-bottom: 1px solid rgba(14, 26, 36, 0.03);">
+    <div class="wrap" style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="font-weight: 700; display: flex; gap: 8px; cursor: pointer;" onclick="location.href='../index.html'"><span style="width:10px; height:10px; background: var(--green-bright); border-radius: 50%;"></span> Debt Freedom</div>
+      <div style="display: flex; gap: 8px;">
+        <button style="background: transparent; border: none; padding: 8px 12px; cursor: pointer; color: var(--slate);" onclick="location.href='../index.html'">Calculator</button>
+        <button style="background: transparent; border: none; padding: 8px 12px; cursor: pointer; color: var(--slate);" onclick="location.href='dashboard.html'">Dashboard</button>
+        <button style="background: transparent; border: none; padding: 8px 12px; cursor: pointer; color: var(--slate);" onclick="location.href='budget-planner.html'" style="color: var(--green-bright); font-weight: 700;">Budget</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="wrap">
+      <h1>Smart <em>Budget</em> Planning</h1>
+      <p>Allocate your income across categories, track spending, and find money for debt payoff and goals.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="budget-grid">
+      <div>
+        <div class="card">
+          <h2>Monthly Income</h2>
+          <input type="number" id="monthlyIncome" class="income-input" placeholder="Enter gross monthly income" min="0" step="100">
+          <div class="summary">
+            <div class="summary-row"><span>Gross Income:</span> <strong id="incomeDisplay">$0</strong></div>
+            <div class="summary-row"><span>Est. Taxes (25%):</span> <strong id="taxDisplay">$0</strong></div>
+            <div class="summary-row" style="border-top: 1px solid var(--line); padding-top: 8px; margin-top: 8px;"><span>Net Income:</span> <strong id="netDisplay">$0</strong></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 20px;">
+          <h2>Budget Categories</h2>
+          <div class="category-list" id="categoryList"></div>
+          <button class="add-btn" onclick="addCategory()">+ Add Category</button>
+          <div class="summary" style="margin-top: 16px;">
+            <div class="summary-row"><span>Total Allocated:</span> <strong id="allocatedDisplay">$0</strong></div>
+            <div class="summary-row"><span>Remaining:</span> <strong id="remainingDisplay">$0</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>Budget Breakdown</h2>
+          <canvas id="budgetChart" width="300" height="300"></canvas>
+          <div style="margin-top: 20px; font-size: 0.85rem; color: var(--slate);">
+            <p><strong style="color: var(--green-bright);">💡 Pro Tip:</strong> Most financial experts recommend the 50/30/20 rule: 50% needs, 30% wants, 20% debt/savings.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script>
+    const BUDGET_KEY = 'df.budget.v1';
+    const defaultCategories = [
+      { name: 'Housing', amount: 0 },
+      { name: 'Groceries', amount: 0 },
+      { name: 'Transportation', amount: 0 },
+      { name: 'Utilities', amount: 0 },
+      { name: 'Insurance', amount: 0 },
+      { name: 'Entertainment', amount: 0 }
+    ];
+
+    function loadBudget() {
+      try {
+        const data = JSON.parse(localStorage.getItem(BUDGET_KEY));
+        return data || { income: 0, categories: defaultCategories };
+      } catch (e) {
+        return { income: 0, categories: defaultCategories };
+      }
+    }
+
+    function saveBudget(budget) {
+      localStorage.setItem(BUDGET_KEY, JSON.stringify(budget));
+    }
+
+    let budget = loadBudget();
+
+    function renderCategories() {
+      const list = document.getElementById('categoryList');
+      list.innerHTML = '';
+      budget.categories.forEach((cat, idx) => {
+        const row = document.createElement('div');
+        row.className = 'category-row';
+        row.innerHTML = `
+          <input type="text" value="${esc(cat.name)}" onchange="updateCategory(${idx}, 'name', this.value)" placeholder="Category">
+          <input type="number" value="${cat.amount}" min="0" step="10" onchange="updateCategory(${idx}, 'amount', parseFloat(this.value))" placeholder="$0">
+          <button class="btn-remove" onclick="deleteCategory(${idx})">Delete</button>
+        `;
+        list.appendChild(row);
+      });
+      updateSummary();
+    }
+
+    function updateCategory(idx, field, value) {
+      budget.categories[idx][field] = value;
+      saveBudget(budget);
+      renderCategories();
+    }
+
+    function deleteCategory(idx) {
+      budget.categories.splice(idx, 1);
+      saveBudget(budget);
+      renderCategories();
+    }
+
+    function addCategory() {
+      budget.categories.push({ name: 'New Category', amount: 0 });
+      saveBudget(budget);
+      renderCategories();
+    }
+
+    function updateSummary() {
+      const income = parseFloat(document.getElementById('monthlyIncome').value) || 0;
+      const taxes = income * 0.25;
+      const net = income - taxes;
+      const allocated = budget.categories.reduce((sum, cat) => sum + (parseFloat(cat.amount) || 0), 0);
+      const remaining = net - allocated;
+
+      document.getElementById('incomeDisplay').textContent = '$' + income.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.getElementById('taxDisplay').textContent = '$' + taxes.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.getElementById('netDisplay').textContent = '$' + net.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.getElementById('allocatedDisplay').textContent = '$' + allocated.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.getElementById('remainingDisplay').textContent = '$' + Math.max(0, remaining).toLocaleString('en-US', { maximumFractionDigits: 0 });
+      
+      drawChart(allocated, Math.max(0, remaining));
+    }
+
+    function drawChart(allocated, remaining) {
+      const canvas = document.getElementById('budgetChart');
+      const ctx = canvas.getContext('2d');
+      const total = allocated + remaining;
+      if (total === 0) return;
+
+      const pct = (allocated / total) * 100;
+      const angle = (pct / 100) * Math.PI * 2;
+      const x = canvas.width / 2;
+      const y = canvas.height / 2;
+      const radius = 80;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(242, 237, 227, 0.1)';
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#3FA374';
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.arc(x, y, radius, -Math.PI / 2, -Math.PI / 2 + angle);
+      ctx.lineTo(x, y);
+      ctx.fill();
+
+      ctx.fillStyle = '#0E1A24';
+      ctx.font = 'bold 24px Inter';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(Math.round(pct) + '%', x, y - 10);
+      ctx.font = '12px Inter';
+      ctx.fillText('Allocated', x, y + 15);
+    }
+
+    document.getElementById('monthlyIncome').addEventListener('input', updateSummary);
+    renderCategories();
+  </script>
+</body>
+</html>
