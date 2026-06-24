@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investment Projector — Simulate Investment Growth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .hero { padding: 60px 0 30px; text-align: center; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 15px; }
+    .hero em { color: var(--green-bright); font-style: normal; }
+    .hero p { color: var(--slate); max-width: 600px; margin: 0 auto 30px; }
+    
+    .proj-grid { display: grid; grid-template-columns: 350px 1fr; gap: 24px; padding: 40px 0; }
+    @media(max-width: 900px) { .proj-grid { grid-template-columns: 1fr; } }
+    
+    .form-card { background: #fff; border: 1px solid var(--line-light); border-radius: 12px; padding: 20px; height: fit-content; }
+    .form-card h2 { margin: 0 0 16px; font-size: 1.1rem; }
+    .form-group { margin: 14px 0; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--slate-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+    .form-group input, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid var(--line-light); border-radius: 6px; font-size: 0.95rem; }
+    .form-group input:focus { outline: none; border-color: var(--green); }
+    .slider { width: 100%; margin-top: 6px; accent-color: var(--green-bright); }
+    .slider-value { display: block; font-weight: 600; color: var(--green-bright); margin-top: 4px; font-size: 0.9rem; }
+    
+    .results-card { background: var(--ink-2); color: var(--paper); border-radius: 12px; padding: 24px; }
+    .results-card h2 { margin: 0 0 20px; font-size: 1.2rem; }
+    .result-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--line); }
+    .result-label { color: var(--slate); }
+    .result-value { font-weight: 700; color: var(--green-bright); font-family: 'JetBrains Mono', monospace; }
+    .result-row:last-child { border-bottom: none; }
+    
+    canvas { width: 100%; height: 300px; margin-top: 20px; }
+    
+    .insights { background: rgba(63, 163, 116, 0.1); border-left: 3px solid var(--green-bright); padding: 16px; border-radius: 6px; margin-top: 20px; }
+    .insights p { margin: 8px 0; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <nav style="background: transparent; padding: 14px 0; border-bottom: 1px solid rgba(14, 26, 36, 0.03);">
+    <div class="wrap" style="display: flex; justify-content: space-between;">
+      <div style="font-weight: 700; cursor: pointer;" onclick="location.href='../index.html'"><span style="display: inline-block; width:10px; height:10px; background: var(--green-bright); border-radius: 50%; margin-right: 8px;"></span>Debt Freedom</div>
+      <div style="display: flex; gap: 8px;">
+        <button style="background: transparent; border: none; padding: 8px 12px; cursor: pointer;" onclick="location.href='tools.html'">Tools</button>
+        <button style="background: transparent; border: none; padding: 8px 12px; cursor: pointer; color: var(--green-bright); font-weight: 700;" onclick="location.href='investment-projector.html'">Investments</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="wrap">
+      <h1>Investment <em>Projector</em></h1>
+      <p>See how your investments grow over time. Compare different strategies and plan for long-term wealth building.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="proj-grid">
+      <div class="form-card">
+        <h2>Investment Setup</h2>
+        
+        <div class="form-group">
+          <label for="initialAmount">Initial Investment</label>
+          <input type="number" id="initialAmount" value="5000" min="0" step="100">
+        </div>
+        
+        <div class="form-group">
+          <label for="monthlyContribution">Monthly Contribution</label>
+          <input type="number" id="monthlyContribution" value="500" min="0" step="50">
+        </div>
+        
+        <div class="form-group">
+          <label for="investmentType">Investment Type</label>
+          <select id="investmentType">
+            <option value="stocks">Stocks (8% APR)</option>
+            <option value="bonds">Bonds (4% APR)</option>
+            <option value="mixed">Mixed Portfolio (6% APR)</option>
+            <option value="crypto">Crypto (15% APR - High Risk)</option>
+            <option value="savings">High-Yield Savings (4.75% APR)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="annualReturn">Annual Return Rate (%)</label>
+          <input type="range" id="annualReturn" class="slider" min="1" max="20" value="8" step="0.5">
+          <span class="slider-value" id="returnValue">8%</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="years">Time Horizon (Years)</label>
+          <input type="range" id="years" class="slider" min="1" max="50" value="20" step="1">
+          <span class="slider-value" id="yearsValue">20 years</span>
+        </div>
+      </div>
+
+      <div class="results-card">
+        <h2>Projection Results</h2>
+        
+        <div class="result-row">
+          <span class="result-label">Total Invested</span>
+          <span class="result-value" id="totalInvested">$0</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Investment Growth</span>
+          <span class="result-value" id="investmentGrowth" style="color: var(--green-bright);">$0</span>
+        </div>
+        <div class="result-row" style="background: rgba(63, 163, 116, 0.1); padding: 12px; border-radius: 6px; margin-top: 10px;">
+          <span class="result-label" style="font-weight: 700; color: var(--paper);">Final Amount</span>
+          <span class="result-value" style="font-size: 1.3rem;">$0</span>
+        </div>
+        
+        <canvas id="projectionChart"></canvas>
+        
+        <div class="insights">
+          <p><strong>💡 The Power of Compound Growth:</strong> Starting with $5,000 and adding $500/month at 8% returns grows to over $500K in 30 years!</p>
+          <p style="margin-top: 12px; font-size: 0.85rem;">Start investing as soon as your debt is under control. Even small amounts compound into significant wealth over time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script>
+    const inputs = {
+      initialAmount: document.getElementById('initialAmount'),
+      monthlyContribution: document.getElementById('monthlyContribution'),
+      investmentType: document.getElementById('investmentType'),
+      annualReturn: document.getElementById('annualReturn'),
+      years: document.getElementById('years')
+    };
+
+    const typeReturns = {
+      stocks: 8,
+      bonds: 4,
+      mixed: 6,
+      crypto: 15,
+      savings: 4.75
+    };
+
+    function calculate() {
+      const initial = parseFloat(inputs.initialAmount.value) || 0;
+      const monthly = parseFloat(inputs.monthlyContribution.value) || 0;
+      const returnRate = parseFloat(inputs.annualReturn.value) / 100;
+      const years = parseInt(inputs.years.value);
+      const months = years * 12;
+
+      let balance = initial;
+      const history = [balance];
+
+      for (let m = 1; m <= months; m++) {
+        const monthlyRate = returnRate / 12;
+        balance = balance * (1 + monthlyRate) + monthly;
+        if (m % 12 === 0) {
+          history.push(balance);
+        }
+      }
+
+      const totalInvested = initial + (monthly * months);
+      const growth = balance - totalInvested;
+
+      document.getElementById('totalInvested').textContent = '$' + totalInvested.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.getElementById('investmentGrowth').textContent = '$' + growth.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.querySelectorAll('.result-value')[2].textContent = '$' + balance.toLocaleString('en-US', { maximumFractionDigits: 0 });
+
+      drawProjectionChart(history, years);
+    }
+
+    function drawProjectionChart(history, years) {
+      const canvas = document.getElementById('projectionChart');
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      const maxValue = Math.max(...history);
+      const padding = 40;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw axes
+      ctx.strokeStyle = 'rgba(125, 138, 146, 0.3)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padding, height - padding);
+      ctx.lineTo(width - padding, height - padding);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(padding, padding);
+      ctx.lineTo(padding, height - padding);
+      ctx.stroke();
+
+      // Draw line
+      ctx.strokeStyle = '#3FA374';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      history.forEach((val, i) => {
+        const x = padding + (i / (history.length - 1)) * (width - 2 * padding);
+        const y = height - padding - (val / maxValue) * (height - 2 * padding);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    }
+
+    inputs.investmentType.addEventListener('change', () => {
+      inputs.annualReturn.value = typeReturns[inputs.investmentType.value] || 8;
+      document.getElementById('returnValue').textContent = inputs.annualReturn.value + '%';
+      calculate();
+    });
+
+    inputs.annualReturn.addEventListener('input', () => {
+      document.getElementById('returnValue').textContent = inputs.annualReturn.value + '%';
+      calculate();
+    });
+
+    inputs.years.addEventListener('input', () => {
+      document.getElementById('yearsValue').textContent = inputs.years.value + ' years';
+      calculate();
+    });
+
+    [inputs.initialAmount, inputs.monthlyContribution].forEach(el => {
+      el.addEventListener('input', calculate);
+    });
+
+    calculate();
+  </script>
+</body>
+</html>

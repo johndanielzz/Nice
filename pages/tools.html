@@ -1,31 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Tools — Debt Freedom</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Tools — Calculators & Utilities</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css">
+  <style>
+    .hero { padding: 60px 0 30px; text-align: center; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 15px; }
+    .hero em { color: var(--green-bright); font-style: normal; }
+    .hero p { color: var(--slate); max-width: 600px; margin: 0 auto 30px; }
+    
+    .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; padding: 40px 0; }
+    .tool-card { background: #fff; border: 1px solid var(--line-light); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s; }
+    .tool-card:hover { border-color: var(--green); box-shadow: 0 6px 16px rgba(63, 163, 116, 0.15); transform: translateY(-3px); }
+    .tool-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .tool-title { font-weight: 700; font-size: 1.05rem; margin: 0 0 8px; }
+    .tool-desc { font-size: 0.9rem; color: var(--slate); line-height: 1.5; margin: 0; }
+    .tool-btn { background: var(--green); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-top: 12px; font-weight: 600; font-size: 0.85rem; }
+    .tool-btn:hover { background: var(--green-bright); }
+  </style>
 </head>
 <body>
-  <nav class="top">
-    <div class="wrap nav-inner">
-      <div class="brand" onclick="location.href='../index.html'"><span class="dot"></span> Debt Freedom</div>
-      <div class="nav-links">
-        <button class="nav-link" onclick="location.href='../index.html'">Calculator</button>
-        <button class="nav-link" onclick="location.href='dashboard.html'">Dashboard</button>
-        <button class="nav-link" onclick="location.href='learn.html'">Learn</button>
-        <button class="nav-link active" onclick="location.href='tools.html'">Tools</button>
-        <button class="nav-link" onclick="location.href='pricing.html'">Pricing</button>
+  <nav style="background: transparent; padding: 14px 0; border-bottom: 1px solid rgba(14, 26, 36, 0.03);">
+    <div class="wrap" style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="font-weight: 700; cursor: pointer; display: flex; gap: 8px; align-items: center;" onclick="location.href='../index.html'">
+        <span style="width: 10px; height: 10px; background: var(--green-bright); border-radius: 50%;"></span> Debt Freedom
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button style="background: transparent; border: none; padding: 8px 12px; cursor: pointer; color: var(--slate);" onclick="location.href='../index.html'">Calculator</button>
+        <button style="background: transparent; border: none; padding: 8px 12px; cursor: pointer; color: var(--slate);" onclick="location.href='dashboard.html'">Dashboard</button>
+        <button style="background: transparent; border: none; padding: 8px 12px; cursor: pointer; color: var(--green-bright); font-weight: 700;" onclick="location.href='tools.html'">Tools</button>
       </div>
     </div>
   </nav>
 
-  <main class="wrap">
-    <h1>Tools</h1>
-    <p>Utility pages used across the site (CSV export, print templates, certificate generator) are referenced from the calculator. This page is a placeholder so navigation works end-to-end.</p>
-    <p><a href="../index.html">Back to Calculator</a></p>
-  </main>
+  <section class="hero">
+    <div class="wrap">
+      <h1>Financial <em>Tools</em></h1>
+      <p>A collection of powerful calculators to help with debt payoff, investments, savings, and financial planning.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="tools-grid" id="toolsGrid"></div>
+  </div>
 
   <script src="../js/utils.js"></script>
+  <script>
+    const tools = [
+      { icon: '📊', title: 'Debt Calculator', desc: 'Calculate exact payoff date using multiple strategies.', link: '../index.html' },
+      { icon: '💰', title: 'Savings Goal Planner', desc: 'Track multiple savings goals and milestones.', link: 'savings-goals.html' },
+      { icon: '📈', title: 'Investment Projector', desc: 'Simulate investment growth and compound returns.', link: 'investment-projector.html' },
+      { icon: '💳', title: 'Budget Planner', desc: 'Plan income allocation across categories.', link: 'budget-planner.html' },
+      { icon: '📋', title: 'Payment Dashboard', desc: 'Track payments and celebrate progress streaks.', link: 'dashboard.html' },
+      { icon: '🏦', title: 'Loan Comparator', desc: 'Compare different loan options and terms.', link: '#' },
+      { icon: '🎯', title: 'Net Worth Tracker', desc: 'Monitor total assets minus liabilities.', link: 'wealth-dashboard.html' },
+      { icon: '💡', title: 'Financial Learning', desc: 'Free guides and articles on financial topics.', link: 'learn.html' },
+      { icon: '🔄', title: 'Refinancing Calculator', desc: 'See if refinancing saves you money.', link: '#' },
+      { icon: '📅', title: 'Milestone Planner', desc: 'Set and track financial milestones.', link: '#' },
+      { icon: '✅', title: 'Goal Tracker', desc: 'Track progress toward all your financial goals.', link: 'savings-goals.html' },
+      { icon: '🎓', title: 'Financial Literacy', desc: 'Learn financial terms and concepts.', link: 'learn.html' }
+    ];
+
+    function renderTools() {
+      const grid = document.getElementById('toolsGrid');
+      tools.forEach(tool => {
+        const card = document.createElement('div');
+        card.className = 'tool-card';
+        card.onclick = () => { if (tool.link !== '#') location.href = tool.link; };
+        card.innerHTML = `
+          <div class="tool-icon">${tool.icon}</div>
+          <h3 class="tool-title">${tool.title}</h3>
+          <p class="tool-desc">${tool.desc}</p>
+          <button class="tool-btn">Open →</button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    renderTools();
+  </script>
 </body>
 </html>

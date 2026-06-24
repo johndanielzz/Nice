@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Debt Freedom — Our Mission & Story</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .hero { padding: 80px 0 40px; text-align: center; }
+    .hero h1 { font-size: clamp(2.5rem, 6vw, 3.5rem); margin: 0 0 20px; color: var(--ink); }
+    .hero em { color: var(--green-bright); font-style: normal; }
+    .hero p { color: var(--slate); max-width: 600px; margin: 0 auto 30px; font-size: 1.05rem; line-height: 1.6; }
+    
+    .section { padding: 60px 0; }
+    .section h2 { font-size: 2rem; margin-bottom: 24px; color: var(--ink); }
+    .section p { color: var(--slate); line-height: 1.7; margin: 16px 0; max-width: 700px; }
+    
+    .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 30px; }
+    .value-card { background: #fff; border: 1px solid var(--line-light); border-radius: 12px; padding: 24px; text-align: center; }
+    .value-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .value-title { font-weight: 700; font-size: 1.1rem; margin: 0 0 10px; }
+    .value-desc { font-size: 0.95rem; color: var(--slate); margin: 0; }
+    
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
+    .team-member { text-align: center; }
+    .member-avatar { width: 120px; height: 120px; border-radius: 50%; background: var(--green-bright); margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 2.5rem; }
+    .member-name { font-weight: 700; margin: 0 0 4px; }
+    .member-role { font-size: 0.9rem; color: var(--slate); margin: 0; }
+    
+    .nav { background: transparent; padding: 14px 0; border-bottom: 1px solid rgba(14, 26, 36, 0.03); }
+    .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <div style="font-weight: 700; cursor: pointer; display: flex; gap: 8px;" onclick="location.href='../index.html'">
+        <span style="width: 10px; height: 10px; background: var(--green-bright); border-radius: 50%;"></span> Debt Freedom
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button style="background: transparent; border: none; padding: 8px 12px; cursor: pointer; color: var(--slate);" onclick="location.href='../index.html'">Calculator</button>
+        <button style="background: transparent; border: none; padding: 8px 12px; cursor: pointer; color: var(--slate);" onclick="location.href='pricing.html'">Pricing</button>
+        <button style="background: transparent; border: none; padding: 8px 12px; cursor: pointer; color: var(--green-bright); font-weight: 700;" onclick="location.href='about.html'">About</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="wrap">
+      <h1>Our Mission: <em>Freedom</em> for Everyone</h1>
+      <p>We believe financial freedom shouldn't require a degree in finance. Debt Freedom makes powerful payoff planning accessible, free, and private.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="section">
+      <h2>The Problem We Solve</h2>
+      <p>Most people don't know their exact debt-free date. They pay minimums for years, wondering if they'll ever get ahead. Without a clear plan, debt feels permanent.</p>
+      <p>Debt Freedom changed that. By answering one simple question—"When will I be debt-free?"—we give people hope and a roadmap to financial freedom.</p>
+    </section>
+
+    <section class="section">
+      <h2>Our Values</h2>
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">🔒</div>
+          <h3 class="value-title">Privacy First</h3>
+          <p class="value-desc">Your financial data stays on your device. We never see, store, or share your information.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">💯</div>
+          <h3 class="value-title">100% Honest</h3>
+          <p class="value-desc">No hidden fees, no upselling, no ads in the free calculator. We tell the truth about your finances.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">✨</div>
+          <h3 class="value-title">Beautiful Design</h3>
+          <p class="value-desc">Financial tools should be a pleasure to use, not a chore. We obsess over the details.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🤝</div>
+          <h3 class="value-title">Empowerment</h3>
+          <p class="value-desc">We educate, not manipulate. Knowledge is the foundation of financial independence.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Free vs Pro</h2>
+      <p><strong>Free Tier:</strong> The complete debt payoff calculator. No signup, no ads, no tricks. Use it forever without paying.</p>
+      <p><strong>Pro Tier ($4/month):</strong> For people serious about tracking. Add payment logging, goal tracking, multiple financial tools, and premium reports.</p>
+      <p>We believe the calculator should be free so money is never the barrier. Only pro tools require payment.</p>
+    </section>
+
+    <section class="section">
+      <h2>Our Team</h2>
+      <p>Built by people tired of complex financial software. We started Debt Freedom to prove that financial tools could be simple, beautiful, and actually help people.</p>
+      <div class="team-grid">
+        <div class="team-member">
+          <div class="member-avatar">👨‍💻</div>
+          <p class="member-name">John Daniel</p>
+          <p class="member-role">Founder & Designer</p>
+        </div>
+        <div class="team-member">
+          <div class="member-avatar">📊</div>
+          <p class="member-name">Alex Morgan</p>
+          <p class="member-role">Finance Advisor</p>
+        </div>
+        <div class="team-member">
+          <div class="member-avatar">🔧</div>
+          <p class="member-name">Jordan Taylor</p>
+          <p class="member-role">Developer</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Get Started Today</h2>
+      <p>Ready to find your debt-free date? Start with the free calculator. No email required. No signup. Just math.</p>
+      <button style="background: var(--green); color: white; border: none; padding: 14px 28px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 20px;" onclick="location.href='../index.html'">Open Calculator →</button>
+    </section>
+  </div>
+
+  <script src="../js/utils.js"></script>
+</body>
+</html>
