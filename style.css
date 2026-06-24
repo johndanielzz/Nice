@@ -158,3 +158,68 @@ footer { background: var(--ink-3); border-top: 1px solid var(--line); padding: 5
 button { font: inherit; }
 a { text-decoration: none; }
 input, select { box-sizing: border-box; }
+
+/* ── UPGRADE ADDITIONS ── */
+
+/* Smooth scroll */
+html { scroll-behavior: smooth; }
+
+/* Better focus states */
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--green-bright);
+  outline-offset: 2px;
+}
+
+/* Insight card hover */
+.insight-card { transition: border-color .2s, transform .2s; }
+.insight-card:hover { border-color: rgba(63,163,116,0.3); transform: translateY(-2px); }
+
+/* Aff card hover */
+.aff-card { transition: border-color .2s, transform .2s; }
+.aff-card:hover { border-color: rgba(63,163,116,0.25); transform: translateY(-2px); }
+
+/* Testi card hover */
+.testi-card { transition: border-color .2s; }
+.testi-card:hover { border-color: rgba(63,163,116,0.3); }
+
+/* Better scrollbar across */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+
+/* Auth modal textarea */
+textarea {
+  box-sizing: border-box;
+  font-family: 'JetBrains Mono', monospace;
+  transition: border-color .15s;
+}
+textarea:focus {
+  outline: none;
+  border-color: var(--green-bright) !important;
+}
+
+/* Mobile nav open */
+.nav-links.mobile-open {
+  display: flex !important;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--ink-2);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 18px;
+  gap: 4px;
+  z-index: 200;
+  animation: fadeUp .2s ease;
+}
+
+/* Print styles */
+@media print {
+  nav.top, .sticky-cta, .modal-backdrop, footer, .affiliate-section, .testimonials,
+  .insights-section, .cta-band, .faq-section, .disclosure, #notifPanel { display: none !important; }
+  body { background: white; color: #0E1A24; }
+  .hero { padding: 24px 0 16px; }
+  .main-grid { grid-template-columns: 1fr 1fr; }
+}

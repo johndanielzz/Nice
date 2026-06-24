@@ -11,11 +11,19 @@
 <link rel="stylesheet" href="style.css">
 <style>
 /* ── Hero ── */
-.hero{padding:72px 0 40px;text-align:center;}
-.hero h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.07;max-width:800px;margin:0 auto 18px;}
+.hero{padding:80px 0 48px;text-align:center;}
+.hero h1{font-size:clamp(2.2rem,5.5vw,3.8rem);line-height:1.06;max-width:820px;margin:0 auto 20px;}
 .hero h1 em{font-style:normal;color:var(--green-bright);}
-.hero p.sub{max-width:560px;margin:0 auto 28px;color:var(--slate);font-size:1.02rem;}
+.hero p.sub{max-width:560px;margin:0 auto 32px;color:var(--slate);font-size:1.05rem;}
 .hero-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;}
+
+/* ── User banner (when signed in) ── */
+.user-banner{background:linear-gradient(90deg,rgba(63,163,116,0.12),rgba(63,163,116,0.05));border:1px solid rgba(63,163,116,0.25);border-radius:12px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px;flex-wrap:wrap;}
+.user-banner .ub-left{display:flex;align-items:center;gap:10px;}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:var(--green-bright);color:#0E1A24;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;flex-shrink:0;}
+.user-banner strong{font-size:.92rem;color:var(--paper);}
+.user-banner small{color:var(--slate);font-size:.78rem;}
+.pro-badge{background:var(--green-bright);color:#0E1A24;font-size:.67rem;font-weight:700;padding:2px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:.05em;margin-left:6px;}
 
 /* ── Readout ── */
 .readout{margin:44px auto 0;max-width:900px;background:linear-gradient(160deg,var(--ink-2),#0F2028);border:1px solid var(--line);border-radius:22px;padding:36px 32px 28px;box-shadow:var(--shadow);}
@@ -125,7 +133,8 @@ svg.chart{width:100%;height:150px;display:block;}
 .insights-section{padding:56px 0;}
 .insights-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:32px;}
 @media(max-width:760px){.insights-grid{grid-template-columns:1fr;}}
-.insight-card{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:26px 22px;}
+.insight-card{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:26px 22px;transition:border-color .2s,transform .2s;}
+.insight-card:hover{border-color:rgba(63,163,116,0.3);transform:translateY(-2px);}
 .insight-card .ic-icon{font-size:1.6rem;margin-bottom:12px;}
 .insight-card h4{font-size:1.05rem;margin-bottom:8px;color:var(--paper);}
 .insight-card p{font-size:.87rem;color:var(--slate);line-height:1.55;}
@@ -173,15 +182,55 @@ svg.chart{width:100%;height:150px;display:block;}
 .ring-wrap svg{transform:rotate(-90deg);}
 .ring-bg{fill:none;stroke:rgba(242,237,227,0.08);stroke-width:3;}
 .ring-fg{fill:none;stroke:var(--green-bright);stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset .6s ease;}
+
+/* Plan buttons */
+.plan-btn{flex:1;padding:10px;border-radius:8px;border:1.5px solid var(--line);background:transparent;color:var(--slate);font-size:.82rem;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;font-weight:600;}
+.plan-btn.active{border-color:var(--green-bright);color:var(--green-bright);background:rgba(63,163,116,0.08);}
+
+/* Sign-in modal */
+.auth-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid var(--line);}
+.auth-tab{flex:1;padding:12px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--slate);font-size:.9rem;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;margin-bottom:-1px;}
+.auth-tab.active{color:var(--green-bright);border-bottom-color:var(--green-bright);}
+.auth-form{display:flex;flex-direction:column;gap:14px;}
+.auth-form label{font-size:.75rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;}
+.auth-form input{width:100%;padding:11px 13px;border-radius:9px;border:1.5px solid var(--line);background:rgba(242,237,227,0.06);color:var(--paper);font-family:'Inter',sans-serif;font-size:.92rem;transition:border-color .15s;}
+.auth-form input:focus{outline:none;border-color:var(--green-bright);}
+.auth-divider{text-align:center;font-size:.78rem;color:var(--slate);margin:4px 0;}
+.auth-social{display:flex;gap:8px;}
+.btn-social{flex:1;padding:10px;border-radius:9px;border:1.5px solid var(--line);background:rgba(242,237,227,0.04);color:var(--paper);font-size:.82rem;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.btn-social:hover{border-color:var(--green-bright);background:rgba(63,163,116,0.06);}
+.auth-switch{text-align:center;font-size:.82rem;color:var(--slate);margin-top:8px;}
+.auth-switch button{background:none;border:none;color:var(--green-bright);font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;font-size:.82rem;}
+.password-wrap{position:relative;}
+.password-wrap input{padding-right:44px;}
+.toggle-pw{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--slate);cursor:pointer;font-size:1rem;padding:4px;}
+.strength-bar{height:3px;border-radius:3px;background:rgba(242,237,227,0.08);margin-top:6px;overflow:hidden;}
+.strength-fill{height:100%;border-radius:3px;transition:width .3s,background .3s;}
+.forgot-link{text-align:right;margin-top:-8px;}
+.forgot-link button{background:none;border:none;color:var(--slate);font-size:.78rem;cursor:pointer;font-family:'Inter',sans-serif;transition:color .15s;}
+.forgot-link button:hover{color:var(--green-bright);}
+
+/* Notification bell */
+.notif-btn{position:relative;width:36px;height:36px;border-radius:50%;background:rgba(242,237,227,0.06);border:1px solid var(--line);color:var(--slate);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .15s;}
+.notif-btn:hover{border-color:var(--green-bright);color:var(--paper);}
+.notif-badge{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--rust);border-radius:50%;border:1.5px solid var(--ink);}
+
+/* Mobile hamburger */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;}
+.hamburger span{display:block;width:22px;height:2px;background:var(--slate);border-radius:2px;transition:all .2s;}
+@media(max-width:680px){
+  .hamburger{display:flex;}
+  .nav-links.mobile-open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--ink-2);border-bottom:1px solid var(--line);padding:12px 18px;gap:4px;z-index:200;}
+}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav class="top">
+<nav class="top" style="position:relative;">
   <div class="wrap nav-inner">
     <div class="brand" onclick="location.href='index.html'"><span class="dot"></span> Debt Freedom</div>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
       <button class="nav-link active" onclick="location.href='index.html'">Calculator</button>
       <button class="nav-link" onclick="location.href='dashboard.html'">Dashboard</button>
       <button class="nav-link" onclick="location.href='pages/learn.html'">Learn</button>
@@ -189,8 +238,12 @@ svg.chart{width:100%;height:150px;display:block;}
       <button class="nav-link" onclick="location.href='pages/pricing.html'">Pricing</button>
     </div>
     <div class="nav-actions">
+      <button class="notif-btn" id="notifBtn" title="Notifications" type="button">🔔<span class="notif-badge" id="notifDot" style="display:none;"></span></button>
       <button class="btn-nav ghost" id="navSignIn" type="button">Sign in</button>
       <button class="btn-nav primary" id="navUpgrade" type="button">Go Pro — $4/mo</button>
+      <button class="hamburger" id="hamburger" type="button" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </div>
 </nav>
@@ -198,6 +251,18 @@ svg.chart{width:100%;height:150px;display:block;}
 <!-- HERO -->
 <section class="hero">
   <div class="wrap">
+    <!-- User banner (shown when signed in) -->
+    <div class="user-banner fade-up" id="userBanner" style="display:none;max-width:700px;margin:0 auto 28px;">
+      <div class="ub-left">
+        <div class="user-avatar" id="userAvatarInitial">?</div>
+        <div>
+          <div><strong id="userWelcomeName">Welcome back!</strong><span class="pro-badge" id="userProBadge" style="display:none;">Pro</span></div>
+          <div><small id="userEmail">—</small></div>
+        </div>
+      </div>
+      <button class="btn-nav ghost" id="signOutBtn" type="button" style="font-size:.78rem;padding:6px 12px;">Sign out</button>
+    </div>
+
     <div class="eyebrow fade-up">Free payoff calculator · No signup required</div>
     <h1 class="fade-up-2">See the exact month you become <em>debt-free</em>.</h1>
     <p class="sub fade-up-3">Enter every balance once. We order your payments, project your freedom date, and show exactly what extra money is worth.</p>
@@ -309,6 +374,7 @@ svg.chart{width:100%;height:150px;display:block;}
         <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap;">
           <button class="btn-cert" id="exportCsvBtn" type="button" style="border-color:var(--line-light);color:var(--slate-dim);">⬇ Export CSV</button>
           <button class="btn-cert" id="printPlanBtn" type="button" style="border-color:var(--line-light);color:var(--slate-dim);">🖨 Print plan</button>
+          <button class="btn-cert" id="importDebtsBtn" type="button" style="border-color:var(--line-light);color:var(--slate-dim);">📥 Import</button>
           <button class="btn-cert" id="clearDataBtn" type="button" style="border-color:rgba(181,80,46,0.3);color:var(--rust);">✕ Clear all</button>
         </div>
       </div>
@@ -563,6 +629,10 @@ svg.chart{width:100%;height:150px;display:block;}
         <button class="faq-q" type="button">What does "extra payment" mean exactly? <span class="icon">+</span></button>
         <div class="faq-a"><p>It's the amount you put toward debt above all your minimums combined. If your minimums total $400 and you pay $500, your extra is $100. The calculator applies that extra in your chosen strategy order.</p></div>
       </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">Can I import my debts from another app? <span class="icon">+</span></button>
+        <div class="faq-a"><p>Yes! Click "Import" in the calculator panel to paste a CSV with columns: Name, Balance, APR, MinPayment. You can export first, edit in Excel/Sheets, then re-import.</p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -596,8 +666,9 @@ svg.chart{width:100%;height:150px;display:block;}
       <div class="foot-col">
         <h5>Account</h5>
         <ul>
-          <li><a href="pages/dashboard.html">Dashboard</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
           <li><a href="pages/pricing.html">Upgrade to Pro</a></li>
+          <li><button onclick="document.getElementById('navSignIn').click()">Sign in / Register</button></li>
           <li><button onclick="showPrivacy()">Privacy policy</button></li>
         </ul>
       </div>
@@ -620,6 +691,107 @@ svg.chart{width:100%;height:150px;display:block;}
     <p>Dashboard, tracking & PDF export</p>
   </div>
   <button class="btn-nav primary" onclick="document.getElementById('upgradeBtn').click()" type="button">Try Pro</button>
+</div>
+
+<!-- ── SIGN IN / REGISTER MODAL ── -->
+<div class="modal-backdrop" id="authModal">
+  <div class="modal" style="max-width:420px;">
+    <button class="close-btn" id="closeAuthModal" type="button">✕</button>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabSignIn" type="button">Sign in</button>
+      <button class="auth-tab" id="tabRegister" type="button">Create account</button>
+    </div>
+
+    <!-- Sign In Form -->
+    <div id="formSignIn">
+      <div class="auth-form">
+        <div>
+          <label>Email</label>
+          <input type="email" id="siEmail" placeholder="you@email.com" autocomplete="email">
+        </div>
+        <div>
+          <label>Password</label>
+          <div class="password-wrap">
+            <input type="password" id="siPassword" placeholder="••••••••" autocomplete="current-password">
+            <button class="toggle-pw" type="button" onclick="togglePw('siPassword',this)">👁</button>
+          </div>
+        </div>
+        <div class="forgot-link">
+          <button type="button" id="forgotPwBtn">Forgot password?</button>
+        </div>
+        <button class="btn-primary" id="signInSubmit" type="button">Sign in</button>
+      </div>
+      <div class="auth-divider" style="margin:16px 0;">— or continue with —</div>
+      <div class="auth-social">
+        <button class="btn-social" type="button" onclick="socialSignIn('Google')">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 01-7.18-2.54H1.83v2.07A8 8 0 008.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 010-3.04V5.41H1.83a8 8 0 000 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 001.83 5.4L4.5 7.49a4.77 4.77 0 014.48-3.3z"/></svg>
+          Google
+        </button>
+        <button class="btn-social" type="button" onclick="socialSignIn('Apple')">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><path d="M13.17 9.54a3.45 3.45 0 011.66-2.9 3.53 3.53 0 00-2.78-1.5c-1.17-.12-2.3.69-2.9.69-.6 0-1.5-.67-2.48-.65a3.7 3.7 0 00-3.11 1.9C1.8 9.5 2.94 13 4.7 14.86c.88.97 1.92 2.06 3.27 2.01 1.32-.05 1.82-.85 3.41-.85 1.6 0 2.05.85 3.44.82 1.42-.02 2.32-1 3.18-1.98a8.19 8.19 0 001.43-2.22 3.34 3.34 0 01-2.06-3.1zM11.18 3.96A3.4 3.4 0 0012 1.5a3.46 3.46 0 00-2.24 1.16A3.23 3.23 0 009 5.04c.9.07 1.77-.36 2.18-1.08z"/></svg>
+          Apple
+        </button>
+      </div>
+      <div class="auth-switch">Don't have an account? <button type="button" onclick="switchAuthTab('register')">Create one</button></div>
+    </div>
+
+    <!-- Register Form -->
+    <div id="formRegister" style="display:none;">
+      <div class="auth-form">
+        <div>
+          <label>Full name</label>
+          <input type="text" id="regName" placeholder="Jane Smith" autocomplete="name">
+        </div>
+        <div>
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="you@email.com" autocomplete="email">
+        </div>
+        <div>
+          <label>Password</label>
+          <div class="password-wrap">
+            <input type="password" id="regPassword" placeholder="Min 8 characters" autocomplete="new-password" oninput="updateStrength(this.value)">
+            <button class="toggle-pw" type="button" onclick="togglePw('regPassword',this)">👁</button>
+          </div>
+          <div class="strength-bar"><div class="strength-fill" id="strengthFill" style="width:0%;background:var(--rust);"></div></div>
+          <div style="font-size:.72rem;color:var(--slate);margin-top:4px;" id="strengthLabel"></div>
+        </div>
+        <div>
+          <label>Confirm password</label>
+          <div class="password-wrap">
+            <input type="password" id="regPasswordConfirm" placeholder="Repeat password" autocomplete="new-password">
+            <button class="toggle-pw" type="button" onclick="togglePw('regPasswordConfirm',this)">👁</button>
+          </div>
+        </div>
+        <button class="btn-primary" id="registerSubmit" type="button">Create account</button>
+      </div>
+      <div class="auth-divider" style="margin:16px 0;">— or —</div>
+      <div class="auth-social">
+        <button class="btn-social" type="button" onclick="socialSignIn('Google')">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 01-7.18-2.54H1.83v2.07A8 8 0 008.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 010-3.04V5.41H1.83a8 8 0 000 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 001.83 5.4L4.5 7.49a4.77 4.77 0 014.48-3.3z"/></svg>
+          Google
+        </button>
+        <button class="btn-social" type="button" onclick="socialSignIn('Apple')">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><path d="M13.17 9.54a3.45 3.45 0 011.66-2.9 3.53 3.53 0 00-2.78-1.5c-1.17-.12-2.3.69-2.9.69-.6 0-1.5-.67-2.48-.65a3.7 3.7 0 00-3.11 1.9C1.8 9.5 2.94 13 4.7 14.86c.88.97 1.92 2.06 3.27 2.01 1.32-.05 1.82-.85 3.41-.85 1.6 0 2.05.85 3.44.82 1.42-.02 2.32-1 3.18-1.98a8.19 8.19 0 001.43-2.22 3.34 3.34 0 01-2.06-3.1zM11.18 3.96A3.4 3.4 0 0012 1.5a3.46 3.46 0 00-2.24 1.16A3.23 3.23 0 009 5.04c.9.07 1.77-.36 2.18-1.08z"/></svg>
+          Apple
+        </button>
+      </div>
+      <div class="auth-switch">Already have an account? <button type="button" onclick="switchAuthTab('signin')">Sign in</button></div>
+    </div>
+
+    <!-- Forgot password panel -->
+    <div id="formForgot" style="display:none;">
+      <p style="font-size:.88rem;color:var(--slate);margin-bottom:16px;">Enter your email and we'll send a reset link.</p>
+      <div class="auth-form">
+        <div>
+          <label>Email</label>
+          <input type="email" id="forgotEmail" placeholder="you@email.com">
+        </div>
+        <button class="btn-primary" id="forgotSubmit" type="button">Send reset link</button>
+      </div>
+      <div class="auth-switch"><button type="button" onclick="switchAuthTab('signin')">← Back to sign in</button></div>
+    </div>
+
+  </div>
 </div>
 
 <!-- UPGRADE / PAYMENT MODAL -->
@@ -657,12 +829,37 @@ svg.chart{width:100%;height:150px;display:block;}
   </div>
 </div>
 
-<div id="toast">Saved ✓</div>
+<!-- IMPORT MODAL -->
+<div class="modal-backdrop" id="importModal">
+  <div class="modal" style="max-width:460px;">
+    <button class="close-btn" id="closeImportModal" type="button">✕</button>
+    <h3>Import Debts</h3>
+    <p>Paste CSV data below. Required columns: <code style="background:rgba(242,237,227,0.08);padding:2px 6px;border-radius:4px;font-size:.8rem;">Name, Balance, APR, MinPayment</code></p>
+    <textarea id="importCsvText" placeholder="Name,Balance,APR,MinPayment&#10;Credit Card,4200,22.9,120&#10;Car Loan,9800,6.5,230" style="width:100%;height:140px;background:rgba(242,237,227,0.06);border:1.5px solid var(--line);border-radius:10px;color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.82rem;padding:12px;resize:vertical;margin-bottom:14px;"></textarea>
+    <button class="btn-primary" id="submitImportBtn" type="button">Import debts</button>
+    <p class="fine" style="margin-top:10px;">Existing debts will be replaced. Make sure each row has all 4 columns.</p>
+  </div>
+</div>
 
-<style>
-.plan-btn{flex:1;padding:10px;border-radius:8px;border:1.5px solid var(--line);background:transparent;color:var(--slate);font-size:.82rem;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;font-weight:600;}
-.plan-btn.active{border-color:var(--green-bright);color:var(--green-bright);background:rgba(63,163,116,0.08);}
-</style>
+<!-- NOTIFICATIONS PANEL -->
+<div id="notifPanel" style="display:none;position:fixed;top:64px;right:18px;width:300px;background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:18px;z-index:300;box-shadow:var(--shadow);">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <strong style="font-size:.9rem;">Notifications</strong>
+    <button onclick="document.getElementById('notifPanel').style.display='none'" style="background:none;border:none;color:var(--slate);cursor:pointer;font-size:1rem;">✕</button>
+  </div>
+  <div id="notifList" style="display:flex;flex-direction:column;gap:10px;font-size:.84rem;color:var(--slate);">
+    <div style="padding:10px;background:rgba(63,163,116,0.07);border:1px solid rgba(63,163,116,0.2);border-radius:9px;color:var(--paper);">
+      <div style="font-weight:600;color:var(--green-bright);margin-bottom:3px;">💡 Tip of the day</div>
+      Adding just $50 extra/month can cut your debt-free date by months. Try the slider!
+    </div>
+    <div style="padding:10px;background:rgba(242,237,227,0.04);border:1px solid var(--line);border-radius:9px;">
+      <div style="font-weight:600;margin-bottom:3px;">📊 Your plan is saved</div>
+      Your debts are auto-saved locally. No account needed.
+    </div>
+  </div>
+</div>
+
+<div id="toast">Saved ✓</div>
 
 <script src="utils.js"></script>
 <script>
@@ -673,6 +870,173 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
 var state = loadAppState();
 var lastResult = null, lastBaseline = null;
+
+// ── Auth state ──
+var AUTH_KEY = 'df.auth.v1';
+function loadAuth(){ try{ return JSON.parse(localStorage.getItem(AUTH_KEY))||null; }catch(e){return null;} }
+function saveAuth(a){ try{ localStorage.setItem(AUTH_KEY, a?JSON.stringify(a):''); }catch(e){} }
+var currentUser = loadAuth();
+
+function updateNavForAuth(){
+  var signInBtn = document.getElementById('navSignIn');
+  var upgradeBtn = document.getElementById('navUpgrade');
+  var banner = document.getElementById('userBanner');
+  if(currentUser){
+    signInBtn.textContent = 'Account';
+    signInBtn.onclick = function(){ showAuthModal('account'); };
+    banner.style.display = 'flex';
+    document.getElementById('userWelcomeName').textContent = 'Welcome back, ' + (currentUser.name || currentUser.email.split('@')[0]) + '!';
+    document.getElementById('userEmail').textContent = currentUser.email;
+    document.getElementById('userAvatarInitial').textContent = (currentUser.name||currentUser.email).charAt(0).toUpperCase();
+    if(currentUser.pro || isPro()){
+      document.getElementById('userProBadge').style.display = 'inline-block';
+      upgradeBtn.textContent = '⭐ Pro Active';
+      upgradeBtn.style.background = 'var(--green)';
+    }
+    document.getElementById('notifDot').style.display = 'block';
+  } else {
+    signInBtn.textContent = 'Sign in';
+    banner.style.display = 'none';
+  }
+}
+
+// ── Hamburger ──
+document.getElementById('hamburger').addEventListener('click', function(){
+  document.getElementById('navLinks').classList.toggle('mobile-open');
+});
+
+// ── Notifications ──
+document.getElementById('notifBtn').addEventListener('click', function(e){
+  e.stopPropagation();
+  var p = document.getElementById('notifPanel');
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
+});
+document.addEventListener('click', function(e){
+  var p = document.getElementById('notifPanel');
+  if(p.style.display !== 'none' && !p.contains(e.target) && e.target !== document.getElementById('notifBtn')){
+    p.style.display = 'none';
+  }
+});
+
+// ── Auth modal ──
+function showAuthModal(mode){
+  if(mode === 'account' && currentUser){
+    // show account info in sign-in form
+    switchAuthTab('signin');
+    document.getElementById('siEmail').value = currentUser.email;
+  } else {
+    switchAuthTab(mode === 'register' ? 'register' : 'signin');
+  }
+  document.getElementById('authModal').classList.add('open');
+}
+
+window.switchAuthTab = function(tab){
+  document.getElementById('formSignIn').style.display = 'none';
+  document.getElementById('formRegister').style.display = 'none';
+  document.getElementById('formForgot').style.display = 'none';
+  document.getElementById('tabSignIn').classList.toggle('active', tab==='signin');
+  document.getElementById('tabRegister').classList.toggle('active', tab==='register');
+  if(tab==='signin') document.getElementById('formSignIn').style.display = 'block';
+  else if(tab==='register') document.getElementById('formRegister').style.display = 'block';
+  else if(tab==='forgot') document.getElementById('formForgot').style.display = 'block';
+};
+
+document.getElementById('tabSignIn').addEventListener('click', function(){ switchAuthTab('signin'); });
+document.getElementById('tabRegister').addEventListener('click', function(){ switchAuthTab('register'); });
+document.getElementById('navSignIn').addEventListener('click', function(){ showAuthModal('signin'); });
+document.getElementById('closeAuthModal').addEventListener('click', function(){ document.getElementById('authModal').classList.remove('open'); });
+document.getElementById('authModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
+
+document.getElementById('forgotPwBtn').addEventListener('click', function(){ switchAuthTab('forgot'); });
+document.getElementById('forgotSubmit').addEventListener('click', function(){
+  var email = document.getElementById('forgotEmail').value.trim();
+  if(!email||!email.includes('@')){ showToast('Please enter your email.'); return; }
+  document.getElementById('authModal').classList.remove('open');
+  showToast('Reset link sent to ' + email + ' ✓ (demo mode)');
+});
+
+// Sign in
+document.getElementById('signInSubmit').addEventListener('click', function(){
+  var email = document.getElementById('siEmail').value.trim();
+  var password = document.getElementById('siPassword').value;
+  if(!email||!email.includes('@')){ showToast('Please enter a valid email.'); return; }
+  if(!password||password.length<6){ showToast('Please enter your password.'); return; }
+  // Demo: check if user registered in this session, or create session
+  var stored = null;
+  try{ stored = JSON.parse(localStorage.getItem('df.users.v1')||'{}'); }catch(e){ stored={}; }
+  if(stored[email] && stored[email].password !== password){
+    showToast('Incorrect password. Try again.'); return;
+  }
+  currentUser = stored[email] || { email:email, name:email.split('@')[0], pro: isPro() };
+  saveAuth(currentUser);
+  document.getElementById('authModal').classList.remove('open');
+  updateNavForAuth();
+  showToast('Welcome back, ' + (currentUser.name||'friend') + '! 👋');
+});
+
+// Register
+document.getElementById('registerSubmit').addEventListener('click', function(){
+  var name = document.getElementById('regName').value.trim();
+  var email = document.getElementById('regEmail').value.trim();
+  var pw = document.getElementById('regPassword').value;
+  var pw2 = document.getElementById('regPasswordConfirm').value;
+  if(!name){ showToast('Please enter your name.'); return; }
+  if(!email||!email.includes('@')){ showToast('Please enter a valid email.'); return; }
+  if(!pw||pw.length<8){ showToast('Password must be at least 8 characters.'); return; }
+  if(pw !== pw2){ showToast('Passwords do not match.'); return; }
+  var stored = {}; try{ stored = JSON.parse(localStorage.getItem('df.users.v1')||'{}'); }catch(e){}
+  if(stored[email]){ showToast('An account with this email already exists.'); return; }
+  stored[email] = { email:email, name:name, password:pw, pro:false };
+  localStorage.setItem('df.users.v1', JSON.stringify(stored));
+  currentUser = { email:email, name:name, pro:false };
+  saveAuth(currentUser);
+  document.getElementById('authModal').classList.remove('open');
+  updateNavForAuth();
+  showToast('Account created! Welcome, ' + name + ' 🎉');
+});
+
+// Sign out
+document.getElementById('signOutBtn').addEventListener('click', function(){
+  if(!confirm('Sign out of your account?')) return;
+  currentUser = null;
+  saveAuth(null);
+  updateNavForAuth();
+  showToast('Signed out.');
+});
+
+window.socialSignIn = function(provider){
+  // Demo social sign-in
+  var email = (provider.toLowerCase()) + '.user@demo.com';
+  var name = provider + ' User';
+  currentUser = { email:email, name:name, pro:false };
+  saveAuth(currentUser);
+  document.getElementById('authModal').classList.remove('open');
+  updateNavForAuth();
+  showToast('Signed in with ' + provider + ' ✓ (demo mode)');
+};
+
+window.togglePw = function(inputId, btn){
+  var input = document.getElementById(inputId);
+  var isText = input.type === 'text';
+  input.type = isText ? 'password' : 'text';
+  btn.textContent = isText ? '👁' : '🙈';
+};
+
+window.updateStrength = function(pw){
+  var score = 0;
+  if(pw.length>=8) score++;
+  if(/[A-Z]/.test(pw)) score++;
+  if(/[0-9]/.test(pw)) score++;
+  if(/[^A-Za-z0-9]/.test(pw)) score++;
+  var fill = document.getElementById('strengthFill');
+  var label = document.getElementById('strengthLabel');
+  var pct = [0,25,50,75,100][score];
+  var colors = ['var(--rust)','var(--rust)','var(--gold)','var(--green)','var(--green-bright)'];
+  var labels = ['','Weak','Fair','Good','Strong'];
+  fill.style.width = pct+'%';
+  fill.style.background = colors[score];
+  label.textContent = labels[score];
+};
 
 // ── Debt rows ──
 var debtListEl = document.getElementById('debtList');
@@ -779,8 +1143,7 @@ function renderReadout(r, b){
   var saved = Math.max((b?b.totalInterest:0)-r.totalInterest, 0);
   document.getElementById('interestSaved').textContent = saved > 0 ? '+'+fmtMoney(saved) : '$0';
   document.getElementById('fuseRight').textContent = monthsToLabel(r.months);
-  // fuse progress (current time as % of total journey)
-  var pct = Math.min(0.02, 1); // starts at beginning
+  var pct = Math.min(0.02, 1);
   var offset = 980 - (980 * pct);
   document.getElementById('fuseProgress').setAttribute('stroke-dashoffset', offset);
   var x = 10 + (980 * pct);
@@ -919,22 +1282,57 @@ document.getElementById('submitPaymentBtn').addEventListener('click', function()
   var txHash = document.getElementById('txHash').value.trim();
   if(!email||!email.includes('@')){ showToast('Please enter your email'); return; }
   if(!txHash||txHash.length<10){ showToast('Please enter your transaction hash'); return; }
-  // In production: POST to your backend to verify and activate
   setPro(true);
+  if(currentUser){ currentUser.pro=true; saveAuth(currentUser); }
   document.getElementById('upgradeModal').classList.remove('open');
   showToast('🎉 Pro activated! Enjoy your full access.');
-  setTimeout(function(){ location.href='pages/dashboard.html'; }, 1500);
+  updateNavForAuth();
+  setTimeout(function(){ location.href='dashboard.html'; }, 1500);
 });
 
 // ── Nav buttons ──
-document.getElementById('navSignIn').addEventListener('click', function(){
-  showToast('Sign-in coming soon. Your data is already saved locally.');
-});
 document.getElementById('navUpgrade').addEventListener('click', function(){
   document.getElementById('proCta').scrollIntoView({ behavior:'smooth', block:'start' });
 });
 document.getElementById('learnMoreBtn').addEventListener('click', function(){
   location.href='pages/pricing.html';
+});
+
+// ── Import modal ──
+document.getElementById('importDebtsBtn').addEventListener('click', function(){
+  document.getElementById('importModal').classList.add('open');
+});
+document.getElementById('closeImportModal').addEventListener('click', function(){
+  document.getElementById('importModal').classList.remove('open');
+});
+document.getElementById('importModal').addEventListener('click', function(e){
+  if(e.target===this) this.classList.remove('open');
+});
+document.getElementById('submitImportBtn').addEventListener('click', function(){
+  var text = document.getElementById('importCsvText').value.trim();
+  if(!text){ showToast('Paste some CSV data first.'); return; }
+  var lines = text.split('\n').filter(function(l){ return l.trim(); });
+  var startIdx = 0;
+  // skip header if it contains non-numeric in balance column
+  if(lines[0] && isNaN(parseFloat(lines[0].split(',')[1]))) startIdx=1;
+  var imported = [];
+  var errors = 0;
+  lines.slice(startIdx).forEach(function(line){
+    var parts = line.split(',');
+    if(parts.length<4){ errors++; return; }
+    var bal = parseFloat(parts[1]);
+    var apr = parseFloat(parts[2]);
+    var min = parseFloat(parts[3]);
+    if(isNaN(bal)||isNaN(apr)||isNaN(min)){ errors++; return; }
+    imported.push({ id:uid(), name:parts[0].trim(), balance:bal, apr:apr, min:min });
+  });
+  if(!imported.length){ showToast('No valid rows found. Check your CSV format.'); return; }
+  state.debts = imported;
+  saveAppState(state);
+  renderDebtRows();
+  recalculate();
+  document.getElementById('importModal').classList.remove('open');
+  showToast('Imported '+imported.length+' debts'+(errors?' ('+errors+' rows skipped)':'')+'!');
 });
 
 // ── Share / cert ──
@@ -950,15 +1348,34 @@ document.getElementById('downloadCertBtn').addEventListener('click', function(){
   if(!lastResult){ showToast('Add debts first.'); return; }
   var date = monthsToLabel(lastResult.months);
   var saved = fmtMoney(Math.max((lastBaseline?lastBaseline.totalInterest:0)-lastResult.totalInterest,0));
+  var totalDebt = state.debts.reduce(function(a,d){ return a+(d.balance||0); }, 0);
   var win = window.open('','_blank');
-  win.document.write('<html><head><title>Debt Freedom Certificate</title><style>body{font-family:Georgia,serif;text-align:center;padding:60px 40px;background:#F2EDE3;color:#0E1A24;}h1{font-size:2.5rem;color:#2E7D5B;margin-bottom:8px;}p{font-size:1.1rem;line-height:1.8;}.date{font-size:2rem;font-weight:bold;}.saved{color:#2E7D5B;font-weight:bold;}.footer{margin-top:40px;font-size:.8rem;color:#6B7E8C;}</style></head><body>'+
-    '<h1>🎉 Debt Freedom Certificate</h1>'+
-    '<p>This certifies that, based on your current plan,<br>you are projected to become debt-free on:</p>'+
+  win.document.write('<html><head><title>Debt Freedom Certificate</title><style>'+
+    'body{font-family:Georgia,serif;text-align:center;padding:60px 40px;background:linear-gradient(160deg,#F2EDE3,#E8E0D0);color:#0E1A24;min-height:100vh;}'+
+    '.cert{max-width:600px;margin:0 auto;background:white;padding:60px 48px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.15);}'+
+    '.seal{font-size:4rem;margin-bottom:16px;}'+
+    'h1{font-size:2rem;color:#2E7D5B;margin-bottom:8px;}'+
+    '.subtitle{color:#7D8A92;font-size:.9rem;margin-bottom:32px;text-transform:uppercase;letter-spacing:.1em;}'+
+    'p{font-size:1rem;line-height:1.8;color:#0E1A24;}.date{font-size:2.2rem;font-weight:bold;color:#2E7D5B;margin:16px 0;}.saved{color:#2E7D5B;font-weight:bold;}'+
+    '.footer-cert{margin-top:40px;font-size:.75rem;color:#9AA6AD;padding-top:20px;border-top:1px solid #eee;}'+
+    '.stats{display:flex;gap:24px;justify-content:center;margin:24px 0;flex-wrap:wrap;}'+
+    '.stat-box{background:#F7F4EE;border-radius:12px;padding:14px 20px;}.stat-box .label{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:#7D8A92;margin-bottom:4px;}.stat-box .val{font-size:1.2rem;font-weight:bold;color:#0E1A24;}'+
+    'button{padding:12px 28px;background:#2E7D5B;color:white;border:none;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:24px;}'+
+    '</style></head><body>'+
+    '<div class="cert">'+
+    '<div class="seal">🏆</div>'+
+    '<h1>Debt Freedom Certificate</h1>'+
+    '<div class="subtitle">Officially debt-free by</div>'+
     '<div class="date">'+date+'</div>'+
-    '<p style="margin-top:24px;">Saving an estimated <span class="saved">'+saved+'</span> in interest<br>compared to paying minimums only.</p>'+
-    '<p class="footer">Generated by Debt Freedom Pro · '+new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})+'</p>'+
-    '<br><button onclick="window.print()" style="padding:12px 28px;background:#2E7D5B;color:white;border:none;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:16px;">Print / Save PDF</button>'+
-    '</body></html>');
+    '<p>This certifies that, based on your current payoff plan,<br>you are projected to eliminate <strong>'+fmtMoney(totalDebt)+'</strong> in total debt.</p>'+
+    '<div class="stats">'+
+    '<div class="stat-box"><div class="label">Interest saved</div><div class="val">'+saved+'</div></div>'+
+    '<div class="stat-box"><div class="label">Total months</div><div class="val">'+lastResult.months+'</div></div>'+
+    '<div class="stat-box"><div class="label">Debts cleared</div><div class="val">'+lastResult.order.length+'</div></div>'+
+    '</div>'+
+    '<button onclick="window.print()">🖨 Print / Save PDF</button>'+
+    '<div class="footer-cert">Generated by Debt Freedom Pro · '+new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})+'<br>This is a projection based on consistent monthly payments. Actual results may vary.</div>'+
+    '</div></body></html>');
   win.document.close();
 });
 
@@ -1024,6 +1441,12 @@ whatifSlider.value = state.extra;
 setStrategy(state.strategy);
 recalculate();
 initFaq();
+updateNavForAuth();
+
+// Show notif dot if not signed in (encourage signup)
+if(!currentUser){
+  document.getElementById('notifDot').style.display = 'block';
+}
 
 })();
 </script>
