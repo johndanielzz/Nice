@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Debt Freedom Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.page-hero{padding:48px 0 32px;}
+.page-hero h1{font-size:2rem;margin-bottom:8px;}
+.page-hero p{color:var(--slate);font-size:1rem;}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
+@media(max-width:860px){.stats-row{grid-template-columns:1fr 1fr;}}
+@media(max-width:480px){.stats-row{grid-template-columns:1fr;}}
+.stat-card{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:22px 20px;}
+.stat-card .sc-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--slate);margin-bottom:8px;}
+.stat-card .sc-value{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:700;line-height:1;}
+.stat-card .sc-sub{font-size:.78rem;color:var(--slate);margin-top:6px;}
+.stat-card.green .sc-value{color:var(--green-bright);}
+.stat-card.rust .sc-value{color:var(--rust);}
+.stat-card.gold .sc-value{color:var(--gold);}
+
+.dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:start;}
+@media(max-width:860px){.dash-grid{grid-template-columns:1fr;}}
+
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;}
+.section-head h2{font-size:1.2rem;}
+.section-head .action{font-size:.82rem;color:var(--green-bright);cursor:pointer;background:none;border:none;font-family:'Inter',sans-serif;font-weight:600;}
+
+/* Debt progress cards */
+.debt-progress-card{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:12px;}
+.dpc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.dpc-name{font-weight:600;font-size:.97rem;}
+.dpc-badge{font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:5px;text-transform:uppercase;letter-spacing:.05em;}
+.dpc-badge.high{background:rgba(181,80,46,0.2);color:var(--rust);}
+.dpc-badge.med{background:rgba(201,155,58,0.2);color:var(--gold);}
+.dpc-badge.low{background:rgba(63,163,116,0.2);color:var(--green-bright);}
+.dpc-bar-wrap{background:rgba(242,237,227,0.06);border-radius:6px;height:8px;overflow:hidden;margin-bottom:8px;}
+.dpc-bar{height:100%;border-radius:6px;background:var(--green-bright);transition:width .6s ease;}
+.dpc-meta{display:flex;justify-content:space-between;font-size:.77rem;color:var(--slate);font-family:'JetBrains Mono',monospace;}
+.dpc-actions{display:flex;gap:8px;margin-top:12px;}
+.btn-sm{padding:7px 14px;border-radius:7px;font-size:.78rem;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;border:1.5px solid var(--line);background:transparent;color:var(--slate);}
+.btn-sm:hover{border-color:var(--green-bright);color:var(--green-bright);}
+.btn-sm.primary-sm{background:var(--green-bright);color:#0E1A24;border-color:transparent;}
+
+/* Payment log */
+.pay-log{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;}
+.pay-log::-webkit-scrollbar{width:4px;}
+.pay-log::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+.pay-entry{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(242,237,227,0.03);border:1px solid var(--line);border-radius:10px;}
+.pay-entry .pe-icon{width:32px;height:32px;border-radius:50%;background:rgba(63,163,116,0.15);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.pay-entry .pe-info{flex:1;min-width:0;}
+.pay-entry .pe-name{font-size:.88rem;font-weight:600;}
+.pay-entry .pe-date{font-size:.74rem;color:var(--slate);}
+.pay-entry .pe-amount{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--green-bright);font-weight:700;white-space:nowrap;}
+.empty-log{text-align:center;padding:32px;color:var(--slate);font-size:.9rem;}
+
+/* Goals */
+.goal-card{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:10px;}
+.goal-card .gc-name{font-weight:600;font-size:.92rem;margin-bottom:6px;}
+.goal-card .gc-bar-wrap{background:rgba(242,237,227,0.06);border-radius:4px;height:6px;overflow:hidden;margin-bottom:6px;}
+.goal-card .gc-bar{height:100%;border-radius:4px;background:var(--gold);transition:width .5s ease;}
+.goal-card .gc-meta{font-size:.75rem;color:var(--slate);display:flex;justify-content:space-between;}
+
+/* Log payment modal */
+#logModal .modal-body{display:flex;flex-direction:column;gap:12px;}
+#logModal label{font-size:.76rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;}
+#logModal select, #logModal input{width:100%;padding:10px 12px;border-radius:9px;border:1.5px solid var(--line);background:rgba(242,237,227,0.06);color:var(--paper);font-family:'Inter',sans-serif;font-size:.9rem;}
+#logModal select:focus, #logModal input:focus{outline:none;border-color:var(--green-bright);}
+
+/* Net worth */
+.nw-card{background:linear-gradient(160deg,var(--ink-2),#0F2028);border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:24px;}
+.nw-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px;}
+@media(max-width:560px){.nw-grid{grid-template-columns:1fr;}}
+.nw-item label{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--slate);display:block;margin-bottom:4px;}
+.nw-item input{width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--line);background:rgba(242,237,227,0.06);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.95rem;}
+.nw-item input:focus{outline:none;border-color:var(--green-bright);}
+.nw-result{margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;}
+.nw-res-item .nwr-label{font-size:.72rem;color:var(--slate);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+.nw-res-item .nwr-val{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;}
+
+/* Streak */
+.streak-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.streak-day{width:28px;height:28px;border-radius:6px;background:rgba(242,237,227,0.06);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--slate);}
+.streak-day.paid{background:rgba(63,163,116,0.2);border-color:rgba(63,163,116,0.4);color:var(--green-bright);}
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap nav-inner">
+    <div class="brand" onclick="location.href='../index.html'"><span class="dot"></span> Debt Freedom</div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="location.href='../index.html'">Calculator</button>
+      <button class="nav-link active" onclick="location.href='dashboard.html'">Dashboard</button>
+      <button class="nav-link" onclick="location.href='learn.html'">Learn</button>
+      <button class="nav-link" onclick="location.href='tools.html'">Tools</button>
+      <button class="nav-link" onclick="location.href='pricing.html'">Pricing</button>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-nav ghost" onclick="location.href='../index.html'" type="button">← Calculator</button>
+      <button class="btn-nav primary" id="navUpgrade" type="button">Go Pro</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-hero">
+    <div class="eyebrow">Your progress</div>
+    <h1>Debt Freedom Dashboard</h1>
+    <p>Track every payment, watch balances drop, and stay motivated on your path to zero.</p>
+  </div>
+
+  <!-- Stats row -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card rust">
+      <div class="sc-label">Total debt remaining</div>
+      <div class="sc-value" id="sc-total">$0</div>
+      <div class="sc-sub" id="sc-total-sub">across all debts</div>
+    </div>
+    <div class="stat-card green">
+      <div class="sc-label">Total paid so far</div>
+      <div class="sc-value" id="sc-paid">$0</div>
+      <div class="sc-sub">from your payment log</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="sc-label">Months to freedom</div>
+      <div class="sc-value" id="sc-months">—</div>
+      <div class="sc-sub" id="sc-freeDate">Based on current plan</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Payment streak</div>
+      <div class="sc-value" id="sc-streak" style="color:var(--green-bright);">0</div>
+      <div class="sc-sub">months in a row</div>
+    </div>
+  </div>
+
+  <!-- Net worth tracker -->
+  <div class="nw-card">
+    <div class="eyebrow" style="margin-bottom:8px;">Net worth tracker</div>
+    <h2 style="font-size:1.2rem;margin-bottom:4px;">Assets minus debts = your real wealth</h2>
+    <p style="color:var(--slate);font-size:.85rem;">Enter your assets below. Your debts are pulled from the calculator automatically.</p>
+    <div class="nw-grid">
+      <div class="nw-item">
+        <label>Savings / Cash</label>
+        <input type="number" id="nw-savings" min="0" step="100" value="0" inputmode="decimal" placeholder="0">
+      </div>
+      <div class="nw-item">
+        <label>Investments / Stocks</label>
+        <input type="number" id="nw-investments" min="0" step="100" value="0" inputmode="decimal" placeholder="0">
+      </div>
+      <div class="nw-item">
+        <label>Property / Other</label>
+        <input type="number" id="nw-property" min="0" step="1000" value="0" inputmode="decimal" placeholder="0">
+      </div>
+    </div>
+    <div class="nw-result">
+      <div class="nw-res-item"><div class="nwr-label">Total assets</div><div class="nwr-val" id="nw-assets" style="color:var(--green-bright);">$0</div></div>
+      <div class="nw-res-item"><div class="nwr-label">Total debts</div><div class="nwr-val" id="nw-debts" style="color:var(--rust);">$0</div></div>
+      <div class="nw-res-item"><div class="nwr-label">Net worth</div><div class="nwr-val" id="nw-net">$0</div></div>
+    </div>
+  </div>
+
+  <div class="dash-grid">
+    <!-- LEFT: Debt progress cards -->
+    <div>
+      <div class="section-head">
+        <h2>Debt progress</h2>
+        <button class="action" id="logPaymentBtn">+ Log a payment</button>
+      </div>
+      <div id="debtProgressList">
+        <div class="empty-log">Load the calculator first to see your debts here.</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Payment log + Goals -->
+    <div>
+      <!-- Payment log -->
+      <div class="section-head" style="margin-top:0;">
+        <h2>Payment history</h2>
+        <button class="action" id="clearLogBtn" style="color:var(--rust);">Clear log</button>
+      </div>
+      <div class="pay-log" id="payLog">
+        <div class="empty-log">No payments logged yet. Hit "Log a payment" to start tracking.</div>
+      </div>
+
+      <!-- Goals -->
+      <div class="section-head" style="margin-top:28px;">
+        <h2>Milestones</h2>
+        <button class="action" id="addGoalBtn">+ Add goal</button>
+      </div>
+      <div id="goalList">
+        <div class="empty-log" style="padding:16px 0;font-size:.84rem;color:var(--slate);">No milestones set. Add a savings goal or a debt target.</div>
+      </div>
+
+      <!-- Streak calendar -->
+      <div style="margin-top:28px;">
+        <div class="section-head">
+          <h2>Payment streak</h2>
+        </div>
+        <p style="font-size:.84rem;color:var(--slate);margin-bottom:12px;">Green = month you logged a payment</p>
+        <div class="streak-row" id="streakRow"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- footer spacer -->
+<div style="height:60px;"></div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-bottom">
+      <div>© <span id="year"></span> Debt Freedom Pro</div>
+      <div><a href="../index.html">← Back to Calculator</a></div>
+    </div>
+  </div>
+</footer>
+
+<!-- Log Payment Modal -->
+<div class="modal-backdrop" id="logModal">
+  <div class="modal">
+    <button class="close-btn" id="closeLogModal">✕</button>
+    <h3>Log a Payment</h3>
+    <p>Record a payment you made toward any of your debts.</p>
+    <div class="modal-body">
+      <div>
+        <label>Which debt?</label>
+        <select id="logDebtSelect"></select>
+      </div>
+      <div>
+        <label>Amount paid ($)</label>
+        <input type="number" id="logAmount" min="0" step="0.01" placeholder="e.g. 250.00">
+      </div>
+      <div>
+        <label>Date</label>
+        <input type="date" id="logDate">
+      </div>
+      <div>
+        <label>Note (optional)</label>
+        <input type="text" id="logNote" placeholder="e.g. Extra payment from bonus">
+      </div>
+    </div>
+    <br>
+    <button class="btn-primary" id="submitLogBtn">Save Payment</button>
+  </div>
+</div>
+
+<!-- Add Goal Modal -->
+<div class="modal-backdrop" id="goalModal">
+  <div class="modal">
+    <button class="close-btn" id="closeGoalModal">✕</button>
+    <h3>Add a Milestone</h3>
+    <p>Set a savings goal or debt payoff target to stay motivated.</p>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div>
+        <label style="font-size:.76rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Milestone name</label>
+        <input type="text" id="goalName" placeholder="e.g. Credit card paid off" style="width:100%;padding:10px 12px;border-radius:9px;border:1.5px solid var(--line);background:rgba(242,237,227,0.06);color:var(--paper);font-family:'Inter',sans-serif;font-size:.9rem;">
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Target amount ($)</label>
+        <input type="number" id="goalTarget" min="0" placeholder="e.g. 5000" style="width:100%;padding:10px 12px;border-radius:9px;border:1.5px solid var(--line);background:rgba(242,237,227,0.06);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.9rem;">
+      </div>
+      <div>
+        <label style="font-size:.76rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;">Current progress ($)</label>
+        <input type="number" id="goalCurrent" min="0" placeholder="e.g. 1200" style="width:100%;padding:10px 12px;border-radius:9px;border:1.5px solid var(--line);background:rgba(242,237,227,0.06);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.9rem;">
+      </div>
+    </div>
+    <br>
+    <button class="btn-primary" id="submitGoalBtn">Save Milestone</button>
+  </div>
+</div>
+
+<div id="toast">Saved ✓</div>
+
+<script src="../js/utils.js"></script>
+<script>
+(function(){
+"use strict";
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+var state = loadAppState();
+
+// Set today as default date
+document.getElementById('logDate').value = new Date().toISOString().split('T')[0];
+
+// ── Net worth ──
+var NWK = 'df.networth.v1';
+function loadNW(){ try{ return JSON.parse(localStorage.getItem(NWK))||{savings:0,investments:0,property:0}; }catch(e){return{savings:0,investments:0,property:0};} }
+function saveNW(nw){ try{ localStorage.setItem(NWK, JSON.stringify(nw)); }catch(e){} }
+
+var nw = loadNW();
+document.getElementById('nw-savings').value = nw.savings||0;
+document.getElementById('nw-investments').value = nw.investments||0;
+document.getElementById('nw-property').value = nw.property||0;
+
+function updateNW(){
+  var s = parseFloat(document.getElementById('nw-savings').value)||0;
+  var i = parseFloat(document.getElementById('nw-investments').value)||0;
+  var p = parseFloat(document.getElementById('nw-property').value)||0;
+  saveNW({savings:s,investments:i,property:p});
+  var assets = s+i+p;
+  var totalDebt = state.debts.reduce(function(a,d){ return a+(d.balance||0); },0);
+  var net = assets - totalDebt;
+  document.getElementById('nw-assets').textContent = fmtMoney(assets);
+  document.getElementById('nw-debts').textContent = fmtMoney(totalDebt);
+  var netEl = document.getElementById('nw-net');
+  netEl.textContent = (net>=0?'+':'')+fmtMoney(net);
+  netEl.style.color = net>=0 ? 'var(--green-bright)' : 'var(--rust)';
+}
+['nw-savings','nw-investments','nw-property'].forEach(function(id){
+  document.getElementById(id).addEventListener('input', updateNW);
+});
+updateNW();
+
+// ── Stats ──
+function updateStats(){
+  var totalDebt = state.debts.reduce(function(a,d){ return a+(d.balance||0); },0);
+  var totalPaid = (state.payLog||[]).reduce(function(a,p){ return a+p.amount; },0);
+  document.getElementById('sc-total').textContent = fmtMoney(totalDebt);
+  document.getElementById('sc-paid').textContent = fmtMoney(totalPaid);
+
+  var validDebts = state.debts.filter(function(d){ return d.balance>0; });
+  if(validDebts.length>0){
+    var r = simulate(validDebts, state.extra, state.strategy);
+    document.getElementById('sc-months').textContent = r.months;
+    document.getElementById('sc-freeDate').textContent = monthsToLabel(r.months);
+  }
+
+  // streak
+  var log = state.payLog||[];
+  var monthsWithPayments = {};
+  log.forEach(function(p){
+    var d = new Date(p.date);
+    var key = d.getFullYear()+'-'+d.getMonth();
+    monthsWithPayments[key] = true;
+  });
+  var streak = 0;
+  var now = new Date();
+  for(var i=0;i<24;i++){
+    var d2 = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    var key2 = d2.getFullYear()+'-'+d2.getMonth();
+    if(monthsWithPayments[key2]) streak++;
+    else if(i>0) break;
+  }
+  document.getElementById('sc-streak').textContent = streak;
+}
+
+// ── Debt progress ──
+function renderDebtProgress(){
+  var el = document.getElementById('debtProgressList');
+  if(!state.debts||!state.debts.length){
+    el.innerHTML='<div class="empty-log">No debts found. <a href="../index.html" style="color:var(--green-bright);">Add debts in the calculator →</a></div>';
+    return;
+  }
+  var totalPaidByDebt = {};
+  (state.payLog||[]).forEach(function(p){
+    totalPaidByDebt[p.debtId] = (totalPaidByDebt[p.debtId]||0)+p.amount;
+  });
+
+  el.innerHTML='';
+  state.debts.forEach(function(d){
+    var originalBal = (totalPaidByDebt[d.id]||0) + d.balance;
+    var paidSoFar = totalPaidByDebt[d.id]||0;
+    var pct = originalBal>0 ? Math.min(100, Math.round((paidSoFar/originalBal)*100)) : 0;
+    var aprClass = d.apr>=20 ? 'high' : d.apr>=10 ? 'med' : 'low';
+    var card = document.createElement('div');
+    card.className='debt-progress-card';
+    card.innerHTML=
+      '<div class="dpc-top"><span class="dpc-name">'+esc(d.name||'Debt')+'</span><span class="dpc-badge '+aprClass+'">'+d.apr+'% APR</span></div>'+
+      '<div class="dpc-bar-wrap"><div class="dpc-bar" style="width:'+pct+'%"></div></div>'+
+      '<div class="dpc-meta"><span>'+fmtMoney(d.balance)+' remaining</span><span>'+pct+'% paid</span></div>'+
+      '<div class="dpc-actions">'+
+        '<button class="btn-sm primary-sm log-this" data-id="'+d.id+'" data-name="'+esc(d.name)+'" type="button">+ Log payment</button>'+
+        '<span style="font-size:.78rem;color:var(--slate);display:flex;align-items:center;">Min: '+fmtMoney(d.min)+'/mo</span>'+
+      '</div>';
+    el.appendChild(card);
+  });
+
+  el.querySelectorAll('.log-this').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.getElementById('logDebtSelect').value = btn.dataset.id;
+      openLogModal();
+    });
+  });
+}
+
+// ── Payment log ──
+function renderPayLog(){
+  var el = document.getElementById('payLog');
+  var log = (state.payLog||[]).slice().reverse();
+  if(!log.length){
+    el.innerHTML='<div class="empty-log">No payments logged yet.</div>';
+    return;
+  }
+  el.innerHTML='';
+  log.forEach(function(p){
+    var entry = document.createElement('div');
+    entry.className='pay-entry';
+    entry.innerHTML=
+      '<div class="pe-icon">💳</div>'+
+      '<div class="pe-info">'+
+        '<div class="pe-name">'+esc(p.debtName)+(p.note?' <span style="font-weight:400;color:var(--slate)">· '+esc(p.note)+'</span>':'')+'</div>'+
+        '<div class="pe-date">'+new Date(p.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'</div>'+
+      '</div>'+
+      '<div class="pe-amount">'+fmtMoney(p.amount)+'</div>';
+    el.appendChild(entry);
+  });
+}
+
+// ── Goals ──
+function renderGoals(){
+  var el = document.getElementById('goalList');
+  var goals = state.goals||[];
+  if(!goals.length){
+    el.innerHTML='<div class="empty-log" style="padding:16px 0;font-size:.84rem;color:var(--slate);">No milestones set.</div>';
+    return;
+  }
+  el.innerHTML='';
+  goals.forEach(function(g,i){
+    var pct = g.target>0 ? Math.min(100,Math.round((g.current/g.target)*100)) : 0;
+    var card = document.createElement('div');
+    card.className='goal-card';
+    card.innerHTML=
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'+
+        '<div class="gc-name">'+esc(g.name)+'</div>'+
+        '<button style="background:none;border:none;color:var(--rust);cursor:pointer;font-size:.85rem;" onclick="removeGoal('+i+')">✕</button>'+
+      '</div>'+
+      '<div class="gc-bar-wrap"><div class="gc-bar" style="width:'+pct+'%"></div></div>'+
+      '<div class="gc-meta"><span>'+fmtMoney(g.current)+' / '+fmtMoney(g.target)+'</span><span>'+pct+'% complete</span></div>';
+    el.appendChild(card);
+  });
+}
+
+window.removeGoal = function(i){
+  state.goals.splice(i,1);
+  saveAppState(state);
+  renderGoals();
+};
+
+// ── Streak calendar ──
+function renderStreak(){
+  var el = document.getElementById('streakRow');
+  el.innerHTML='';
+  var log = state.payLog||[];
+  var monthsWithPayments = {};
+  log.forEach(function(p){
+    var d = new Date(p.date);
+    var key = d.getFullYear()+'-'+d.getMonth();
+    monthsWithPayments[key] = true;
+  });
+  var now = new Date();
+  for(var i=11;i>=0;i--){
+    var d2 = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    var key2 = d2.getFullYear()+'-'+d2.getMonth();
+    var hasPay = !!monthsWithPayments[key2];
+    var day = document.createElement('div');
+    day.className='streak-day'+(hasPay?' paid':'');
+    day.title = d2.toLocaleDateString('en-US',{month:'short',year:'numeric'});
+    day.textContent = d2.toLocaleDateString('en-US',{month:'short'}).slice(0,1);
+    el.appendChild(day);
+  }
+}
+
+// ── Log modal ──
+function openLogModal(){
+  var sel = document.getElementById('logDebtSelect');
+  sel.innerHTML='';
+  state.debts.forEach(function(d){
+    var opt = document.createElement('option');
+    opt.value=d.id;
+    opt.textContent=d.name||'Debt';
+    sel.appendChild(opt);
+  });
+  document.getElementById('logModal').classList.add('open');
+}
+document.getElementById('logPaymentBtn').addEventListener('click', openLogModal);
+document.getElementById('closeLogModal').addEventListener('click', function(){
+  document.getElementById('logModal').classList.remove('open');
+});
+document.getElementById('logModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
+
+document.getElementById('submitLogBtn').addEventListener('click', function(){
+  var debtId = document.getElementById('logDebtSelect').value;
+  var amount = parseFloat(document.getElementById('logAmount').value)||0;
+  var date = document.getElementById('logDate').value;
+  var note = document.getElementById('logNote').value;
+  if(!amount){ showToast('Enter an amount.'); return; }
+  if(!date){ showToast('Enter a date.'); return; }
+  var debtName = '';
+  state.debts.forEach(function(d){ if(d.id===debtId) debtName=d.name; });
+
+  if(!state.payLog) state.payLog=[];
+  state.payLog.push({ id:uid(), debtId:debtId, debtName:debtName, amount:amount, date:date, note:note });
+  saveAppState(state);
+  document.getElementById('logModal').classList.remove('open');
+  document.getElementById('logAmount').value='';
+  document.getElementById('logNote').value='';
+  refresh();
+  showToast('Payment logged! 🎉');
+});
+
+// ── Goal modal ──
+document.getElementById('addGoalBtn').addEventListener('click', function(){
+  document.getElementById('goalModal').classList.add('open');
+});
+document.getElementById('closeGoalModal').addEventListener('click', function(){
+  document.getElementById('goalModal').classList.remove('open');
+});
+document.getElementById('goalModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
+
+document.getElementById('submitGoalBtn').addEventListener('click', function(){
+  var name = document.getElementById('goalName').value.trim();
+  var target = parseFloat(document.getElementById('goalTarget').value)||0;
+  var current = parseFloat(document.getElementById('goalCurrent').value)||0;
+  if(!name){ showToast('Enter a milestone name.'); return; }
+  if(!target){ showToast('Enter a target amount.'); return; }
+  if(!state.goals) state.goals=[];
+  state.goals.push({ name:name, target:target, current:current });
+  saveAppState(state);
+  document.getElementById('goalModal').classList.remove('open');
+  document.getElementById('goalName').value='';
+  document.getElementById('goalTarget').value='';
+  document.getElementById('goalCurrent').value='';
+  renderGoals();
+  showToast('Milestone added!');
+});
+
+document.getElementById('clearLogBtn').addEventListener('click', function(){
+  if(!confirm('Clear all payment history? This cannot be undone.')) return;
+  state.payLog=[];
+  saveAppState(state);
+  refresh();
+  showToast('Payment log cleared.');
+});
+
+document.getElementById('navUpgrade').addEventListener('click', function(){
+  location.href='pricing.html';
+});
+
+function refresh(){
+  updateStats();
+  renderDebtProgress();
+  renderPayLog();
+  renderGoals();
+  renderStreak();
+  updateNW();
+}
+
+refresh();
+
+})();
+</script>
+</body>
+</html>
