@@ -1,106 +1,219 @@
-// Minimal utilities used by index.html and placeholder pages
+// Minimal utilities — shared by pages/* and any page loading from js/
+// This is a thin wrapper. Full functionality lives in utils.js (root).
+// Pages under pages/ load this file.
 (function(window){
   'use strict';
+
   function defaultDebts(){
     return [
       { id: uid(), name: 'Visa', balance: 4000, apr: 18.99, min: 80 },
       { id: uid(), name: 'Car Loan', balance: 8200, apr: 5.5, min: 185 }
     ];
   }
+
   function loadAppState(){
-    try{
-      var s = localStorage.getItem('df_state');
-      if(!s) throw 0;
-      var parsed = JSON.parse(s);
-      // migrate older shapes
-      if(!parsed.debts) parsed.debts = defaultDebts();
-      return parsed;
-    }catch(e){
-      return { debts: defaultDebts(), extra:100, strategy:'avalanche', pro:false };
-    }
-  }
-  function saveAppState(state){
-    try{ localStorage.setItem('df_state', JSON.stringify(state)); }
-    catch(e){ console.warn('save failed',e); }
-  }
-  function uid(){ return 'id-'+Math.random().toString(36).slice(2,10); }
-  function esc(s){ if(s==null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function fmtMoney(n){ if(n==null) return '$0.00'; return '$'+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
-  function monthsToLabel(m){
-    if(m<=0) return 'Now';
-    var d = new Date(); d.setMonth(d.getMonth()+m);
-    return d.toLocaleDateString('en-US',{year:'numeric',month:'long'});
-  }
-  function monthsToYM(m){ if(m<=0) return '0 months'; return m+' months'; }
-  function monthToDate(m){ return monthsToLabel(m); }
-
-  // Very small payoff simulator (approximate) that produces plausible-looking output
-  function simulate(debts, extra, strategy){
-    var dcopy = debts.map(function(d){ return { id:d.id, name:d.name||'Debt', balance:Number(d.balance)||0, apr:Number(d.apr)||0, min:Number(d.min)||0, paid:0, interestPaid:0 }; });
-    var months = 0; var history = [];
-    var totalMin = dcopy.reduce(function(s,x){ return s + (x.min||0); },0);
-    var payment = totalMin + (Number(extra)||0);
-    // simple monthly loop
-    var MAX=600;
-    while(dcopy.some(function(x){ return x.balance>0.005; }) && months<MAX){
-      months++;
-      var monthRecord = { month: months, totalBalance:0, interestThisMonth:0 };
-      // accrue interest
-      dcopy.forEach(function(x){ if(x.balance<=0) return; var monthlyRate = (x.apr||0)/100/12; var interest = x.balance*monthlyRate; x.balance += interest; x.interestPaid += interest; monthRecord.interestThisMonth += interest; });
-      // pay minimums first
-      var remaining = payment;
-      dcopy.forEach(function(x){ if(x.balance<=0) return; var pay = Math.min(x.min||0, x.balance); x.balance -= pay; x.paid += pay; remaining -= pay; });
-      // apply remaining according to strategy
-      var order = ordering(dcopy, strategy);
-      for(var i=0;i<order.length && remaining>0;i++){
-        var x = order[i]; if(x.balance<=0) continue;
-        var pay = Math.min(remaining, x.balance);
-        x.balance -= pay; x.paid += pay; remaining -= pay;
+    // Try the v3 keys used by index.html / dashboard.html first
+    try {
+      var debts = JSON.parse(localStorage.getItem('df.debts.v3'));
+      var extra = parseFloat(localStorage.getItem('df.extra.v3'));
+      var strategy = localStorage.getItem('df.strategy.v3');
+      if(debts && debts.length){
+        return {
+          debts: debts,
+          extra: extra || 100,
+          strategy: strategy || 'avalanche',
+          goals: JSON.parse(localStorage.getItem('df.goals.v1')) || [],
+          payLog: JSON.parse(localStorage.getItem('df.paylog.v1')) || [],
+          notes: localStorage.getItem('df.notes.v1') || ''
+        };
       }
-      // clamp negatives
-      dcopy.forEach(function(x){ if(x.balance<0) x.balance = 0; monthRecord.totalBalance += x.balance; });
-      history.push(monthRecord);
-      if(months>1000) break;
+    } catch(e){}
+    // Fallback: legacy single-key state
+    try {
+      var s = localStorage.getItem('df_state');
+      if(s){
+        var parsed = JSON.parse(s);
+        if(!parsed.debts) parsed.debts = defaultDebts();
+        return parsed;
+      }
+    } catch(e){}
+    return { debts: defaultDebts(), extra: 100, strategy: 'avalanche', goals: [], payLog: [], notes: '' };
+  }
+
+  function saveAppState(state){
+    try {
+      localStorage.setItem('df.debts.v3', JSON.stringify(state.debts));
+      localStorage.setItem('df.extra.v3', String(state.extra));
+      localStorage.setItem('df.strategy.v3', state.strategy);
+      localStorage.setItem('df.goals.v1', JSON.stringify(state.goals || []));
+      localStorage.setItem('df.paylog.v1', JSON.stringify(state.payLog || []));
+      if(state.notes !== undefined) localStorage.setItem('df.notes.v1', state.notes);
+    } catch(e){ console.warn('save failed', e); }
+  }
+
+  function uid(){ return 'd' + Math.random().toString(36).slice(2, 9); }
+  function esc(s){ if(s == null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function fmtMoney(v){
+    v = Number(v) || 0;
+    if(v >= 1e6) return '$' + (v/1e6).toFixed(2) + 'M';
+    if(v >= 1000) return '$' + v.toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
+    return '$' + v.toFixed(0);
+  }
+  function fmtMoneyFull(v){ return '$' + Math.abs(Number(v)||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+  function monthToDate(m){
+    var d = new Date(); d.setMonth(d.getMonth() + m);
+    return d.toLocaleDateString('en-US', {month:'short', year:'numeric'});
+  }
+  function monthsToLabel(m){
+    if(!m || m <= 0) return '—';
+    var d = new Date(); d.setMonth(d.getMonth() + m);
+    return d.toLocaleDateString('en-US', {month:'long', year:'numeric'});
+  }
+  function monthsToYM(m){
+    if(!m) return '—';
+    var y = Math.floor(m/12), mo = m%12;
+    if(y === 0) return mo + ' mo';
+    if(mo === 0) return y + ' yr';
+    return y + ' yr ' + mo + ' mo';
+  }
+
+  function sortOrder(list, strategy){
+    var arr = list.slice();
+    if(strategy === 'avalanche'){
+      arr.sort(function(a,b){ return b.apr - a.apr; });
+    } else if(strategy === 'snowball'){
+      arr.sort(function(a,b){ return a.balance - b.balance; });
+    } else {
+      var maxBal = Math.max.apply(null, arr.map(function(d){ return d.balance; })) || 1;
+      var maxApr = Math.max.apply(null, arr.map(function(d){ return d.apr; })) || 1;
+      arr.sort(function(a,b){
+        var sa = 0.4*(1 - a.balance/maxBal) + 0.6*(a.apr/maxApr);
+        var sb = 0.4*(1 - b.balance/maxBal) + 0.6*(b.apr/maxApr);
+        return sb - sa;
+      });
     }
-    // build order summary
-    var orderArr = dcopy.map(function(x){ return { id:x.id, name:x.name, balance:Math.round(x.balance*100)/100, apr:x.apr, paid:x.paid, interestPaid:Math.round(x.interestPaid*100)/100, payoffMonth: Math.round(months) }; });
-    var schedule = history.map(function(h,i){ return { month: h.month, totalBalance: Math.round(h.totalBalance*100)/100, interestThisMonth: Math.round(h.interestThisMonth*100)/100 }; });
-    var totalInterest = dcopy.reduce(function(s,x){ return s + x.interestPaid; },0);
-    return { months: months, history: history, order: orderArr, schedule: schedule, totalInterest: Math.round(totalInterest*100)/100 };
-  }
-  function ordering(debts, strategy){
-    var copy = debts.slice().filter(function(d){ return d.balance>0; });
-    if(strategy==='avalanche') copy.sort(function(a,b){ return b.apr - a.apr; });
-    else if(strategy==='snowball') copy.sort(function(a,b){ return a.balance - b.balance; });
-    else if(strategy==='hybrid') copy.sort(function(a,b){ var s = (b.apr*0.6) - (a.apr*0.6) + (a.balance*0.4) - (b.balance*0.4); return s; });
-    return copy;
+    return arr;
   }
 
-  function simulateMinimumsOnly(debts){ return simulate(debts, 0, 'avalanche'); }
-  function setPro(val){ var s = loadAppState(); s.pro = !!val; saveAppState(s); }
+  function simulate(debts, extraPayment, strategy){
+    var working = debts.filter(function(d){ return d.balance > 0; })
+      .map(function(d){ return { id:d.id, name:d.name||'Debt', balance:d.balance, apr:d.apr||0, min:d.min||0, paid:0, payoffMonth:null, interestPaid:0 }; });
+    if(!working.length) return { months:0, totalInterest:0, order:[], history:[], schedule:[] };
 
-  // toast helper
-  function showToast(msg){
+    var history = [], schedule = [], month = 0, totalInterest = 0, maxMonths = 720;
+    var startTotal = working.reduce(function(a,d){ return a+d.balance; }, 0);
+    history.push({ month:0, totalBalance:startTotal });
+    var extra = extraPayment;
+
+    while(working.reduce(function(a,d){ return a+Math.max(d.balance,0); }, 0) > 0.01 && month < maxMonths){
+      month++;
+      var pool = extra;
+      var monthInterest = 0;
+
+      working.forEach(function(d){
+        if(d.balance <= 0) return;
+        var rate = (d.apr/100)/12;
+        var interest = d.balance * rate;
+        totalInterest += interest; monthInterest += interest;
+        d.interestPaid += interest;
+        d.balance += interest;
+        var pay = Math.min(d.min, d.balance);
+        d.balance -= pay; d.paid += pay;
+      });
+
+      var order = sortOrder(working.filter(function(d){ return d.balance > 0.005; }), strategy);
+      for(var i=0; i<order.length && pool > 0.005; i++){
+        var d2 = order[i], ep = Math.min(pool, d2.balance);
+        d2.balance -= ep; d2.paid += ep; pool -= ep;
+      }
+
+      working.forEach(function(d){
+        if(d.balance <= 0.01 && d.payoffMonth === null){ d.balance = 0; d.payoffMonth = month; }
+      });
+
+      // freed minimums cascade into extra
+      var freed = 0;
+      working.forEach(function(d){ if(d.balance <= 0) freed += d.min; });
+      extra = extraPayment + freed;
+
+      var totalBal = working.reduce(function(a,d){ return a+Math.max(d.balance,0); }, 0);
+      history.push({ month:month, totalBalance:totalBal, interestThisMonth:monthInterest });
+      schedule.push({ month:month, totalBalance:totalBal, interestThisMonth:monthInterest });
+    }
+
+    var orderResult = working.slice().sort(function(a,b){ return (a.payoffMonth||9999)-(b.payoffMonth||9999); });
+    return { months:month, totalInterest:totalInterest, order:orderResult, history:history, schedule:schedule };
+  }
+
+  function simulateMinimumsOnly(debts){
+    var working = debts.filter(function(d){ return d.balance > 0; })
+      .map(function(d){ return { balance:d.balance, apr:d.apr||0, min:d.min||0 }; });
+    if(!working.length) return { totalInterest:0, months:0 };
+    var month = 0, ti = 0, max = 720;
+    while(working.reduce(function(a,d){ return a+Math.max(d.balance,0); }, 0) > 0.01 && month < max){
+      month++;
+      working.forEach(function(d){
+        if(d.balance <= 0) return;
+        var interest = d.balance * (d.apr/100)/12;
+        ti += interest; d.balance += interest;
+        var pay = Math.min(d.min, d.balance);
+        d.balance -= pay;
+        if(d.balance <= 0.01) d.balance = 0;
+      });
+    }
+    return { totalInterest: ti, months: month };
+  }
+
+  function isPro(){ return localStorage.getItem('df.pro') === 'true'; }
+  function setPro(val){ localStorage.setItem('df.pro', val ? 'true' : 'false'); }
+
+  var _toastTimer;
+  function showToast(msg, duration){
     var t = document.getElementById('toast');
-    if(!t){ t = document.createElement('div'); t.id='toast'; t.style.position='fixed'; t.style.right='18px'; t.style.bottom='18px'; t.style.padding='10px 14px'; t.style.background='rgba(0,0,0,0.8)'; t.style.color='#fff'; t.style.borderRadius='8px'; document.body.appendChild(t); }
-    t.textContent = msg;
-    t.style.opacity = '1';
-    clearTimeout(t._hide);
-    t._hide = setTimeout(function(){ t.style.opacity='0'; },2000);
+    if(!t){ t = document.createElement('div'); t.id='toast'; document.body.appendChild(t); }
+    t.textContent = msg || 'Saved ✓';
+    t.classList.add('show');
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(function(){ t.classList.remove('show'); }, duration || 1800);
   }
 
-  // expose
+  function initFaq(container){
+    (container || document).querySelectorAll('.faq-q').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var a = btn.nextElementSibling;
+        var isOpen = btn.classList.contains('open');
+        document.querySelectorAll('.faq-q.open').forEach(function(ob){
+          ob.classList.remove('open');
+          ob.querySelector('.icon').textContent = '+';
+          ob.nextElementSibling.style.maxHeight = '0';
+        });
+        if(!isOpen){
+          btn.classList.add('open');
+          btn.querySelector('.icon').textContent = '×';
+          a.style.maxHeight = a.scrollHeight + 'px';
+        }
+      });
+    });
+  }
+
+  // expose all globals
   window.loadAppState = loadAppState;
   window.saveAppState = saveAppState;
   window.uid = uid;
   window.esc = esc;
   window.fmtMoney = fmtMoney;
+  window.fmtMoneyFull = fmtMoneyFull;
   window.monthsToLabel = monthsToLabel;
   window.monthToDate = monthToDate;
   window.monthsToYM = monthsToYM;
   window.simulate = simulate;
   window.simulateMinimumsOnly = simulateMinimumsOnly;
   window.defaultDebts = defaultDebts;
+  window.sortOrder = sortOrder;
+  window.isPro = isPro;
   window.setPro = setPro;
   window.showToast = showToast;
+  window.initFaq = initFaq;
+  window.navigateTo = function(page){ window.location.href = page; };
 })(window);
