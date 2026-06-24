@@ -3,29 +3,234 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Pricing — Debt Freedom</title>
+  <title>Pricing — Debt Freedom Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css">
+  <style>
+    .pricing-hero{padding:64px 0 40px;text-align:center;}
+    .pricing-hero h1{font-size:clamp(2rem,5vw,3rem);}
+    .pricing-hero p{color:var(--slate);max-width:500px;margin:10px auto 0;font-size:1rem;}
+    .pricing-toggle-row{display:flex;align-items:center;justify-content:center;gap:14px;margin:28px 0 36px;}
+    .pricing-toggle-row span{font-size:.87rem;color:var(--slate-dim);}
+    .toggle-switch{position:relative;width:42px;height:24px;}
+    .toggle-switch input{opacity:0;width:0;height:0;}
+    .toggle-slider{position:absolute;inset:0;background:rgba(14,26,36,0.2);border-radius:24px;cursor:pointer;transition:.2s;border:1px solid var(--line);}
+    .toggle-slider:before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.2s;}
+    .toggle-switch input:checked+.toggle-slider{background:var(--green);}
+    .toggle-switch input:checked+.toggle-slider:before{transform:translateX(18px);}
+    .save-badge{background:var(--green-bright);color:#0E1A24;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;}
+    .plans-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:20px;max-width:780px;margin:0 auto 64px;}
+    @media(max-width:600px){.plans-grid{grid-template-columns:1fr;}}
+    .plan-card{background:var(--ink-2);border:1px solid var(--line);border-radius:20px;padding:32px;}
+    .plan-card.featured{border-color:var(--green-bright);background:linear-gradient(160deg,var(--ink-2),#0F2028);position:relative;overflow:hidden;}
+    .plan-card.featured::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 10%,rgba(63,163,116,0.1),transparent 60%);pointer-events:none;}
+    .plan-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--slate);margin-bottom:10px;}
+    .plan-name{font-size:1.3rem;font-family:'Fraunces','Georgia',serif;margin-bottom:6px;}
+    .plan-price{font-family:'JetBrains Mono',monospace;font-size:2.4rem;font-weight:700;color:var(--green-bright);margin:14px 0 4px;line-height:1;}
+    .plan-price span{font-size:.9rem;color:var(--slate);font-family:'Inter',sans-serif;font-weight:400;}
+    .plan-sub{font-size:.8rem;color:var(--slate);margin-bottom:22px;}
+    .plan-features{list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:9px;}
+    .plan-features li{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:var(--slate);}
+    .plan-features li::before{content:'✓';color:var(--green-bright);font-weight:700;flex-shrink:0;margin-top:1px;}
+    .plan-features li.faded{color:rgba(125,138,146,0.5);}
+    .plan-features li.faded::before{content:'–';color:rgba(125,138,146,0.4);}
+    .plan-btn{width:100%;padding:13px;border-radius:10px;border:none;font-size:.92rem;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;}
+    .plan-btn.outline{background:transparent;border:1.5px solid var(--line);color:var(--paper);}
+    .plan-btn.outline:hover{border-color:var(--paper);}
+    .plan-btn.pro{background:var(--green-bright);color:#0E1A24;}
+    .plan-btn.pro:hover{background:var(--green);}
+    .faq-section{max-width:700px;margin:0 auto;padding-bottom:64px;}
+    .faq-section h2{font-size:1.6rem;margin-bottom:24px;text-align:center;}
+  </style>
 </head>
 <body>
-  <nav class="top">
-    <div class="wrap nav-inner">
-      <div class="brand" onclick="location.href='../index.html'"><span class="dot"></span> Debt Freedom</div>
-      <div class="nav-links">
-        <button class="nav-link" onclick="location.href='../index.html'">Calculator</button>
-        <button class="nav-link" onclick="location.href='dashboard.html'">Dashboard</button>
-        <button class="nav-link" onclick="location.href='learn.html'">Learn</button>
-        <button class="nav-link" onclick="location.href='tools.html'">Tools</button>
-        <button class="nav-link active" onclick="location.href='pricing.html'">Pricing</button>
+<nav class="top">
+  <div class="wrap nav-inner">
+    <div class="brand" onclick="location.href='../index.html'"><span class="dot"></span> Debt Freedom</div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="location.href='../index.html'">Calculator</button>
+      <button class="nav-link" onclick="location.href='../dashboard.html'">Dashboard</button>
+      <button class="nav-link" onclick="location.href='learn.html'">Learn</button>
+      <button class="nav-link" onclick="location.href='tools.html'">Tools</button>
+      <button class="nav-link active" onclick="location.href='pricing.html'">Pricing</button>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-nav ghost" onclick="location.href='../index.html'" type="button">← Calculator</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="pricing-hero">
+    <div class="eyebrow">Simple pricing</div>
+    <h1>Free forever. Pro when you're ready.</h1>
+    <p>The calculator is always free. Pro unlocks the full experience — dashboard, tracking, and exports.</p>
+  </div>
+
+  <div class="pricing-toggle-row">
+    <span>Monthly</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="annualToggle">
+      <span class="toggle-slider"></span>
+    </label>
+    <span>Annual <span class="save-badge">Save 33%</span></span>
+  </div>
+
+  <div class="plans-grid">
+    <div class="plan-card">
+      <div class="plan-label">Free forever</div>
+      <div class="plan-name">Debt Freedom</div>
+      <div class="plan-price">$0<span>/month</span></div>
+      <div class="plan-sub">No credit card required.</div>
+      <ul class="plan-features">
+        <li>Full avalanche, snowball & hybrid calculator</li>
+        <li>Monthly balance table & breakdown</li>
+        <li>What-if payment simulator</li>
+        <li>CSV export of your payoff schedule</li>
+        <li>Saves data in your browser (private)</li>
+        <li class="faded">Payment tracking dashboard</li>
+        <li class="faded">Payment history & streaks</li>
+        <li class="faded">PDF export & certificate</li>
+        <li class="faded">Net worth tracker</li>
+        <li class="faded">Goal milestones & reminders</li>
+      </ul>
+      <button class="plan-btn outline" onclick="location.href='../index.html'" type="button">Use free calculator</button>
+    </div>
+
+    <div class="plan-card featured">
+      <div class="plan-label" style="color:var(--green-bright);">Most popular</div>
+      <div class="plan-name">Debt Freedom Pro</div>
+      <div class="plan-price" id="proPrice">$4<span id="proPeriod">/month</span></div>
+      <div class="plan-sub" id="proSub">Billed monthly. Cancel anytime.</div>
+      <ul class="plan-features">
+        <li>Everything in Free</li>
+        <li>Full payment tracking dashboard</li>
+        <li>Log payments & auto-recalculate</li>
+        <li>Payment history & monthly streaks</li>
+        <li>Payoff certificate generator</li>
+        <li>PDF export of monthly schedule</li>
+        <li>Net worth tracker</li>
+        <li>Goal milestones & progress tracking</li>
+        <li>No ads, ever</li>
+      </ul>
+      <button class="plan-btn pro" id="upgradeBtn" type="button">Upgrade to Pro — Pay with Crypto</button>
+    </div>
+  </div>
+
+  <div class="faq-section">
+    <h2>Questions about Pro</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" type="button">How does USDT payment work? <span class="icon">+</span></button>
+        <div class="faq-a"><p>Click "Upgrade to Pro" and you'll see our USDT ERC-20 wallet address. Send the exact amount shown on the Ethereum mainnet. Once confirmed (usually within minutes), enter your transaction hash and your account is activated immediately.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">Can I cancel anytime? <span class="icon">+</span></button>
+        <div class="faq-a"><p>Yes. Monthly plans can be cancelled before the next billing period. Annual plans are not refundable but you keep access through your paid period. No questions asked.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">Is my data private even on Pro? <span class="icon">+</span></button>
+        <div class="faq-a"><p>All debt and payment data is stored in your browser's localStorage. Nothing is ever sent to any server. Even on Pro, we never see your balances or payment history.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">What if I already use the free calculator? <span class="icon">+</span></button>
+        <div class="faq-a"><p>Your existing debts and settings carry over automatically — they're stored in your browser. Upgrading just unlocks the Pro features. Nothing changes about your existing data.</p></div>
       </div>
     </div>
-  </nav>
+  </div>
+</div>
 
-  <main class="wrap">
-    <h1>Pricing</h1>
-    <p>Pro features include: dashboard, payment tracking, PDF export, and certificate generation. This placeholder ensures the upgrade flow and modal links point to a real page.</p>
-    <p><a href="../index.html">Back to Calculator</a></p>
-  </main>
+<footer>
+  <div class="wrap">
+    <div class="foot-bottom">
+      <div>© <span id="year"></span> Debt Freedom Pro</div>
+      <div><a href="../index.html">← Back to Calculator</a></div>
+    </div>
+  </div>
+</footer>
 
-  <script src="../js/utils.js"></script>
+<!-- Upgrade modal (same as index.html) -->
+<div class="modal-backdrop" id="upgradeModal">
+  <div class="modal">
+    <button class="close-btn" id="closeUpgradeModal" type="button">✕</button>
+    <div class="eyebrow" style="margin-bottom:12px;">Debt Freedom Pro</div>
+    <h3>Upgrade with USDT</h3>
+    <p>Send <strong style="color:var(--green-bright);" id="modalPayAmount">$4.00 USDT</strong> (ERC-20) to activate your Pro account instantly.</p>
+    <div style="background:rgba(242,237,227,0.04);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:20px;">
+      <div style="font-size:.72rem;color:var(--slate);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">USDT ERC-20 Wallet Address</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--paper);word-break:break-all;line-height:1.6;" id="walletDisplay">0xC95fA8e15F0DA428c131169d60762e6a912A9Aba</div>
+      <button id="copyWalletBtn" type="button" style="margin-top:12px;padding:8px 16px;border-radius:7px;border:1px solid var(--line);background:transparent;color:var(--green-bright);font-size:.8rem;font-family:'Inter',sans-serif;cursor:pointer;font-weight:600;">Copy address</button>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:.76rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px;">Your email (for activation)</label>
+      <input type="email" id="proEmail" placeholder="you@email.com">
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:.76rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px;">Transaction hash (after sending)</label>
+      <input type="text" id="txHash" placeholder="0x...">
+    </div>
+    <button class="btn-primary" id="submitPaymentBtn" type="button">Submit & Activate Pro</button>
+    <p class="fine">Pro activates within minutes of confirmation. Payments are non-refundable. Network: Ethereum mainnet (ERC-20) only.</p>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);">
+      <div style="font-size:.78rem;color:var(--slate);text-align:center;margin-bottom:12px;">Plan</div>
+      <div style="display:flex;gap:10px;">
+        <button class="plan-toggle-btn active" id="planMonthly" data-plan="monthly" data-price="4.00" type="button">Monthly · $4/mo</button>
+        <button class="plan-toggle-btn" id="planAnnual" data-plan="annual" data-price="32.00" type="button">Annual · $32/yr <span style="background:var(--green-bright);color:#0E1A24;font-size:.65rem;padding:1px 6px;border-radius:4px;font-weight:700;">Save 33%</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.plan-toggle-btn{flex:1;padding:10px;border-radius:8px;border:1.5px solid var(--line);background:transparent;color:var(--slate);font-size:.82rem;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;font-weight:600;}
+.plan-toggle-btn.active{border-color:var(--green-bright);color:var(--green-bright);background:rgba(63,163,116,0.08);}
+</style>
+
+<div id="toast">Saved ✓</div>
+<script src="../js/utils.js"></script>
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+initFaq();
+
+// Annual toggle
+document.getElementById('annualToggle').addEventListener('change', function(){
+  var annual = this.checked;
+  document.getElementById('proPrice').innerHTML = annual ? '$32<span id="proPeriod">/year</span>' : '$4<span id="proPeriod">/month</span>';
+  document.getElementById('proSub').textContent = annual ? 'Billed annually. That\'s $2.67/month. Cancel anytime.' : 'Billed monthly. Cancel anytime.';
+  document.getElementById('modalPayAmount').textContent = annual ? '$32.00 USDT' : '$4.00 USDT';
+  document.getElementById('planMonthly').classList.toggle('active', !annual);
+  document.getElementById('planAnnual').classList.toggle('active', annual);
+});
+
+// Upgrade modal
+document.getElementById('upgradeBtn').addEventListener('click', function(){ document.getElementById('upgradeModal').classList.add('open'); });
+document.getElementById('closeUpgradeModal').addEventListener('click', function(){ document.getElementById('upgradeModal').classList.remove('open'); });
+document.getElementById('upgradeModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
+
+document.querySelectorAll('.plan-toggle-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.plan-toggle-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('modalPayAmount').textContent = '$'+btn.dataset.price+' USDT';
+  });
+});
+
+document.getElementById('copyWalletBtn').addEventListener('click', function(){
+  navigator.clipboard.writeText('0xC95fA8e15F0DA428c131169d60762e6a912A9Aba').then(function(){ showToast('Wallet address copied!'); });
+});
+
+document.getElementById('submitPaymentBtn').addEventListener('click', function(){
+  var email = document.getElementById('proEmail').value;
+  var txHash = document.getElementById('txHash').value.trim();
+  if(!email||!email.includes('@')){ showToast('Please enter your email'); return; }
+  if(!txHash||txHash.length<10){ showToast('Please enter your transaction hash'); return; }
+  setPro(true);
+  document.getElementById('upgradeModal').classList.remove('open');
+  showToast('🎉 Pro activated! Enjoy your full access.');
+  setTimeout(function(){ location.href='../dashboard.html'; }, 1500);
+});
+</script>
 </body>
 </html>

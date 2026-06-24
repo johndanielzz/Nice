@@ -3,29 +3,133 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Learn — Debt Freedom</title>
+  <title>Learn — Debt Freedom Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css">
+  <style>
+    .learn-hero{padding:56px 0 40px;}
+    .learn-hero h1{font-size:clamp(1.8rem,4vw,2.6rem);}
+    .article-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;padding-bottom:64px;}
+    @media(max-width:640px){.article-grid{grid-template-columns:1fr;}}
+    .article-card{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px;}
+    .article-card .tag{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 9px;border-radius:5px;background:rgba(63,163,116,0.12);color:var(--green-bright);}
+    .article-card h3{font-size:1.1rem;font-family:'Inter',sans-serif;font-weight:700;color:var(--paper);margin:0;}
+    .article-card p{font-size:.88rem;color:var(--slate);line-height:1.6;margin:0;flex:1;}
+    .read-time{font-size:.74rem;color:var(--slate-dim);}
+    .method-compare{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:32px;margin-bottom:40px;}
+    .method-compare h2{font-size:1.4rem;margin-bottom:24px;}
+    .methods{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    @media(max-width:600px){.methods{grid-template-columns:1fr;}}
+    .method{background:rgba(242,237,227,0.04);border:1px solid var(--line);border-radius:12px;padding:20px;}
+    .method h4{font-size:.95rem;font-family:'Inter',sans-serif;font-weight:700;margin-bottom:8px;color:var(--paper);}
+    .method p{font-size:.83rem;color:var(--slate);line-height:1.55;margin:0;}
+    .method .badge-method{display:inline-block;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:4px;margin-bottom:10px;}
+    .badge-method.a{background:rgba(63,163,116,0.15);color:var(--green-bright);}
+    .badge-method.s{background:rgba(201,155,58,0.15);color:var(--gold);}
+    .badge-method.h{background:rgba(124,92,191,0.15);color:#a78bfa;}
+  </style>
 </head>
 <body>
-  <nav class="top">
-    <div class="wrap nav-inner">
-      <div class="brand" onclick="location.href='../index.html'"><span class="dot"></span> Debt Freedom</div>
-      <div class="nav-links">
-        <button class="nav-link" onclick="location.href='../index.html'">Calculator</button>
-        <button class="nav-link" onclick="location.href='dashboard.html'">Dashboard</button>
-        <button class="nav-link active" onclick="location.href='learn.html'">Learn</button>
-        <button class="nav-link" onclick="location.href='tools.html'">Tools</button>
-        <button class="nav-link" onclick="location.href='pricing.html'">Pricing</button>
+<nav class="top">
+  <div class="wrap nav-inner">
+    <div class="brand" onclick="location.href='../index.html'"><span class="dot"></span> Debt Freedom</div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="location.href='../index.html'">Calculator</button>
+      <button class="nav-link" onclick="location.href='../dashboard.html'">Dashboard</button>
+      <button class="nav-link active" onclick="location.href='learn.html'">Learn</button>
+      <button class="nav-link" onclick="location.href='tools.html'">Tools</button>
+      <button class="nav-link" onclick="location.href='pricing.html'">Pricing</button>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-nav ghost" onclick="location.href='../index.html'" type="button">← Calculator</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="learn-hero">
+    <div class="eyebrow">Guides & Strategy</div>
+    <h1>Master your debt payoff</h1>
+    <p style="color:var(--slate);max-width:560px;font-size:1rem;margin-top:10px;">Everything you need to understand the math behind debt freedom — and how to use it to your advantage.</p>
+  </div>
+
+  <div class="method-compare">
+    <h2>The three payoff methods compared</h2>
+    <div class="methods">
+      <div class="method">
+        <div class="badge-method a">Avalanche</div>
+        <h4>Highest interest first</h4>
+        <p>Directs extra payments to the debt with the highest APR. Mathematically optimal — you pay the least total interest possible.</p>
+        <p style="margin-top:10px;font-size:.8rem;color:var(--green-bright);font-weight:600;">Best for: saving the most money</p>
+      </div>
+      <div class="method">
+        <div class="badge-method s">Snowball</div>
+        <h4>Smallest balance first</h4>
+        <p>Targets the smallest balance first. Each payoff frees up a minimum payment to roll into the next — building momentum.</p>
+        <p style="margin-top:10px;font-size:.8rem;color:var(--gold);font-weight:600;">Best for: motivation & quick wins</p>
+      </div>
+      <div class="method">
+        <div class="badge-method h">Hybrid</div>
+        <h4>Balanced approach</h4>
+        <p>Weights 60% toward APR and 40% toward balance size — most of the interest savings with some early psychological wins.</p>
+        <p style="margin-top:10px;font-size:.8rem;color:#a78bfa;font-weight:600;">Best for: balance of both goals</p>
       </div>
     </div>
-  </nav>
+  </div>
 
-  <main class="wrap">
-    <h1>Learn</h1>
-    <p>Short guides and explanations about the avalanche, snowball, and hybrid payoff strategies live here. This page is a placeholder to ensure all site links work.</p>
-    <p><a href="../index.html">Back to Calculator</a></p>
-  </main>
+  <div class="article-grid">
+    <div class="article-card">
+      <div><span class="tag">Strategy</span></div>
+      <h3>Why every extra dollar matters more than you think</h3>
+      <p>The cascade effect means paid-off debts don't retire — their minimum payments flow directly into your next target, exponentially accelerating your timeline.</p>
+      <span class="read-time">3 min read</span>
+    </div>
+    <div class="article-card">
+      <div><span class="tag">Psychology</span></div>
+      <h3>Why snowball users are more likely to finish debt-free</h3>
+      <p>Research shows completing smaller goals first triggers dopamine responses that reinforce financial habits. Snowball users are 25% more likely to maintain their payoff plan.</p>
+      <span class="read-time">4 min read</span>
+    </div>
+    <div class="article-card">
+      <div><span class="tag">Math</span></div>
+      <h3>How interest accrues daily but charges monthly</h3>
+      <p>Most credit cards use average daily balance to calculate interest. Understanding this means you can time extra payments to minimize what accrues next statement.</p>
+      <span class="read-time">3 min read</span>
+    </div>
+    <div class="article-card">
+      <div><span class="tag">Tools</span></div>
+      <h3>The case for a 1-month emergency fund before aggressive payoff</h3>
+      <p>Paying down debt while having no cushion is a trap. One surprise expense forces new credit card charges — setting you back months. A small buffer protects your plan.</p>
+      <span class="read-time">5 min read</span>
+    </div>
+    <div class="article-card">
+      <div><span class="tag">Strategy</span></div>
+      <h3>Balance transfers: when 0% APR is a tool, not a trick</h3>
+      <p>A 0% intro card can freeze interest on your highest-APR debt for 15–21 months. Used correctly with the avalanche method, it can save thousands and shorten your timeline by years.</p>
+      <span class="read-time">4 min read</span>
+    </div>
+    <div class="article-card">
+      <div><span class="tag">Mindset</span></div>
+      <h3>Tracking real payments: why the dashboard changes everything</h3>
+      <p>Seeing a projected date is motivating. Watching your real logged payments chip away at that number is transformational. The gap between knowing and doing closes when data is visible.</p>
+      <span class="read-time">3 min read</span>
+    </div>
+  </div>
+</div>
 
-  <script src="../js/utils.js"></script>
+<footer>
+  <div class="wrap">
+    <div class="foot-bottom">
+      <div>© <span id="year"></span> Debt Freedom Pro</div>
+      <div><a href="../index.html">← Back to Calculator</a></div>
+    </div>
+  </div>
+</footer>
+
+<div id="toast">Saved ✓</div>
+<script src="../js/utils.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

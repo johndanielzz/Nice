@@ -3,29 +3,154 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Tools — Debt Freedom</title>
+  <title>Tools — Debt Freedom Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css">
+  <style>
+    .tools-hero{padding:56px 0 40px;}
+    .tools-hero h1{font-size:clamp(1.8rem,4vw,2.6rem);}
+    .tool-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;padding-bottom:64px;}
+    @media(max-width:640px){.tool-grid{grid-template-columns:1fr;}}
+    .tool-card{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px;}
+    .tool-card .tc-icon{font-size:2rem;}
+    .tool-card h3{font-size:1.05rem;font-family:'Inter',sans-serif;font-weight:700;color:var(--paper);margin:0;}
+    .tool-card p{font-size:.87rem;color:var(--slate);line-height:1.6;margin:0;flex:1;}
+    .tool-card .tool-btn{align-self:flex-start;padding:9px 18px;border-radius:8px;border:1.5px solid var(--line);background:transparent;color:var(--paper);font-size:.82rem;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;}
+    .tool-card .tool-btn:hover{border-color:var(--green-bright);color:var(--green-bright);}
+    .tool-card .tool-btn.primary{background:var(--green-bright);color:#0E1A24;border-color:transparent;}
+    .tool-card .tool-btn.primary:hover{background:var(--green);}
+    .calc-tool{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:28px;margin-bottom:24px;}
+    .calc-tool h3{font-size:1.1rem;font-family:'Inter',sans-serif;font-weight:700;margin-bottom:16px;}
+    .calc-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;}
+    .calc-field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:120px;}
+    .calc-field label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--slate);}
+    .calc-field input{padding:10px 12px;border-radius:9px;border:1.5px solid var(--line);background:rgba(242,237,227,0.05);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:.95rem;}
+    .calc-field input:focus{outline:none;border-color:var(--green-bright);}
+    .calc-result{background:rgba(63,163,116,0.08);border:1px solid rgba(63,163,116,0.2);border-radius:10px;padding:16px 20px;margin-top:16px;font-family:'JetBrains Mono',monospace;}
+    .calc-result .cr-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--slate);margin-bottom:4px;}
+    .calc-result .cr-value{font-size:1.5rem;color:var(--green-bright);font-weight:700;}
+  </style>
 </head>
 <body>
-  <nav class="top">
-    <div class="wrap nav-inner">
-      <div class="brand" onclick="location.href='../index.html'"><span class="dot"></span> Debt Freedom</div>
-      <div class="nav-links">
-        <button class="nav-link" onclick="location.href='../index.html'">Calculator</button>
-        <button class="nav-link" onclick="location.href='dashboard.html'">Dashboard</button>
-        <button class="nav-link" onclick="location.href='learn.html'">Learn</button>
-        <button class="nav-link active" onclick="location.href='tools.html'">Tools</button>
-        <button class="nav-link" onclick="location.href='pricing.html'">Pricing</button>
+<nav class="top">
+  <div class="wrap nav-inner">
+    <div class="brand" onclick="location.href='../index.html'"><span class="dot"></span> Debt Freedom</div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="location.href='../index.html'">Calculator</button>
+      <button class="nav-link" onclick="location.href='../dashboard.html'">Dashboard</button>
+      <button class="nav-link" onclick="location.href='learn.html'">Learn</button>
+      <button class="nav-link active" onclick="location.href='tools.html'">Tools</button>
+      <button class="nav-link" onclick="location.href='pricing.html'">Pricing</button>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-nav ghost" onclick="location.href='../index.html'" type="button">← Calculator</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="tools-hero">
+    <div class="eyebrow">Extra Tools</div>
+    <h1>Financial calculators & utilities</h1>
+    <p style="color:var(--slate);max-width:540px;font-size:1rem;margin-top:10px;">Quick tools to help you make smarter debt decisions — no account required.</p>
+  </div>
+
+  <!-- Interest rate comparison mini-calc -->
+  <div class="calc-tool">
+    <h3>💸 Balance transfer savings estimator</h3>
+    <p style="font-size:.87rem;color:var(--slate);margin-bottom:18px;">How much interest can you save by moving a balance to a 0% card?</p>
+    <div class="calc-row">
+      <div class="calc-field">
+        <label>Current balance ($)</label>
+        <input type="number" id="bt-balance" value="5000" min="0" step="100" inputmode="decimal">
+      </div>
+      <div class="calc-field">
+        <label>Current APR (%)</label>
+        <input type="number" id="bt-apr" value="22.9" min="0" step="0.1" inputmode="decimal">
+      </div>
+      <div class="calc-field">
+        <label>0% period (months)</label>
+        <input type="number" id="bt-months" value="15" min="1" step="1" inputmode="decimal">
+      </div>
+      <div class="calc-field">
+        <label>Monthly payment ($)</label>
+        <input type="number" id="bt-payment" value="250" min="0" step="10" inputmode="decimal">
       </div>
     </div>
-  </nav>
+    <div class="calc-result" id="bt-result">
+      <div class="cr-label">Estimated interest saved</div>
+      <div class="cr-value" id="bt-value">$0</div>
+      <div style="font-size:.78rem;color:var(--slate);margin-top:4px;" id="bt-sub"></div>
+    </div>
+  </div>
 
-  <main class="wrap">
-    <h1>Tools</h1>
-    <p>Utility pages used across the site (CSV export, print templates, certificate generator) are referenced from the calculator. This page is a placeholder so navigation works end-to-end.</p>
-    <p><a href="../index.html">Back to Calculator</a></p>
-  </main>
+  <div class="tool-grid">
+    <div class="tool-card">
+      <div class="tc-icon">📄</div>
+      <h3>Export your payoff schedule</h3>
+      <p>Download your full monthly payment schedule as a CSV. Works with Excel, Google Sheets, or any spreadsheet tool.</p>
+      <button class="tool-btn" onclick="location.href='../index.html'" type="button">Go to Calculator →</button>
+    </div>
+    <div class="tool-card">
+      <div class="tc-icon">🖨</div>
+      <h3>Print your payoff plan</h3>
+      <p>Print a clean, formatted version of your debt plan to stick on your fridge or share with a partner.</p>
+      <button class="tool-btn" onclick="location.href='../index.html'" type="button">Go to Calculator →</button>
+    </div>
+    <div class="tool-card">
+      <div class="tc-icon">🎓</div>
+      <h3>Debt freedom certificate</h3>
+      <p>Generate a shareable certificate showing your projected debt-free date and estimated interest saved.</p>
+      <button class="tool-btn primary" onclick="location.href='../index.html'" type="button">Generate certificate →</button>
+    </div>
+    <div class="tool-card">
+      <div class="tc-icon">📊</div>
+      <h3>Net worth tracker</h3>
+      <p>Track assets vs. debts to see your real financial picture. Available in the full Dashboard.</p>
+      <button class="tool-btn" onclick="location.href='../dashboard.html'" type="button">Open Dashboard →</button>
+    </div>
+  </div>
+</div>
 
-  <script src="../js/utils.js"></script>
+<footer>
+  <div class="wrap">
+    <div class="foot-bottom">
+      <div>© <span id="year"></span> Debt Freedom Pro</div>
+      <div><a href="../index.html">← Back to Calculator</a></div>
+    </div>
+  </div>
+</footer>
+
+<div id="toast">Saved ✓</div>
+<script src="../js/utils.js"></script>
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+function calcBT(){
+  var bal = parseFloat(document.getElementById('bt-balance').value)||0;
+  var apr = parseFloat(document.getElementById('bt-apr').value)||0;
+  var months = parseInt(document.getElementById('bt-months').value)||0;
+  var payment = parseFloat(document.getElementById('bt-payment').value)||0;
+  if(!bal||!months) return;
+  // interest with current APR
+  var b = bal, interest = 0;
+  for(var i=0;i<months;i++){
+    var rate = (apr/100)/12;
+    var mi = b*rate;
+    interest += mi;
+    b += mi;
+    b -= payment;
+    if(b<=0){b=0;break;}
+  }
+  document.getElementById('bt-value').textContent = '$'+Math.round(interest).toLocaleString();
+  document.getElementById('bt-sub').textContent = 'You would owe $'+Math.round(Math.max(b,0)).toLocaleString()+' after '+months+' months without transfer vs. $0 interest with 0% card.';
+}
+['bt-balance','bt-apr','bt-months','bt-payment'].forEach(function(id){
+  document.getElementById(id).addEventListener('input', calcBT);
+});
+calcBT();
+</script>
 </body>
 </html>
